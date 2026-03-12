@@ -1,0 +1,408 @@
+{
+  "info": {
+    "name": "Email Template CRUD API",
+    "description": "Collection for testing Email Template CRUD operations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "subdomain",
+      "value": "tenant1",
+      "type": "string"
+    },
+    {
+      "key": "emailTemplateId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get All Email Templates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has emailTemplates array', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.emailTemplates).to.be.an('object');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All Email Templates with Pagination",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates?page=1&limit=10&sort=createdAt&order=desc",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "sort",
+              "value": "createdAt"
+            },
+            {
+              "key": "order",
+              "value": "desc"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search Email Templates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates?search=order",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates"],
+          "query": [
+            {
+              "key": "search",
+              "value": "order"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Email Template",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Order Confirmation\",\n  \"subject\": \"Your Order #{order_id} has been confirmed\",\n  \"from\": \"orders@yourstore.com\",\n  \"content\": \"Dear {customer_name},\\n\\nThank you for your order #{order_id}.\\n\\nOrder Details:\\nTotal: ${order_total}\\nItems: {order_items}\\n\\nWe will notify you once your order ships.\\n\\nBest regards,\\nYour Store Team\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has emailTemplate object', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.emailTemplate).to.be.an('object');",
+              "    pm.expect(jsonData.emailTemplate._id).to.exist;",
+              "    ",
+              "    // Save the ID for subsequent requests",
+              "    pm.collectionVariables.set('emailTemplateId', jsonData.emailTemplate._id);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Email Template - Shipping Notification",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Shipping Notification\",\n  \"subject\": \"Your Order #{order_id} has shipped!\",\n  \"from\": \"shipping@yourstore.com\",\n  \"content\": \"Dear {customer_name},\\n\\nGreat news! Your order #{order_id} has been shipped.\\n\\nTracking Information:\\nTracking Number: {tracking_number}\\nCarrier: {carrier}\\nEstimated Delivery: {estimated_delivery}\\n\\nYou can track your package at: {tracking_url}\\n\\nThank you for shopping with us!\\n\\nBest regards,\\nYour Store Team\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates"]
+        }
+      }
+    },
+    {
+      "name": "Get Email Template by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates/{{emailTemplateId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates", "{{emailTemplateId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has emailTemplate object', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.emailTemplate).to.be.an('object');",
+              "    pm.expect(jsonData.emailTemplate._id).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Email Template",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Your Order #{order_id} - Confirmation Updated\",\n  \"content\": \"Dear {customer_name},\\n\\nThank you for your order #{order_id}. This is an updated confirmation.\\n\\nOrder Details:\\nTotal: ${order_total}\\nItems: {order_items}\\nOrder Date: {order_date}\\n\\nWe will process your order within 24 hours and notify you once it ships.\\n\\nIf you have any questions, please contact our support team.\\n\\nBest regards,\\nYour Store Team\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates/{{emailTemplateId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates", "{{emailTemplateId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Email template was updated', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.emailTemplate).to.be.an('object');",
+              "    pm.expect(jsonData.emailTemplate.subject).to.include('Updated');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Email Template",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates/{{emailTemplateId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates", "{{emailTemplateId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Success message is present', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('deleted successfully');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases - Invalid ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates/invalid-id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates", "invalid-id"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Response has success false', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "});",
+              "",
+              "pm.test('Error message about invalid ID', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('Invalid');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases - Missing Required Fields",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Incomplete Template\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/email-templates",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "email-templates"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Response has success false', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "});",
+              "",
+              "pm.test('Error message about required fields', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('required');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set subdomain header if needed",
+          "// pm.request.headers.add({key: 'X-Subdomain', value: pm.collectionVariables.get('subdomain')});"
+        ]
+      }
+    }
+  ]
+}

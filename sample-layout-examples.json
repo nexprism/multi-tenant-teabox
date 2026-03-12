@@ -1,0 +1,126 @@
+[
+    {
+        "productId": 1,
+        "layoutId": 123,
+        "layoutName": "Premium Headphones Custom Layout",
+        "totalColumns": 3,
+        "columnGap": 2,
+        "componentGap": 2,
+        "rowGap": 4,
+        "columns": [
+            {
+                "columnIndex": 0,
+                "columnWidth": 1,
+                "columnTitle": "Images Column",
+                "components": [
+                    {
+                        "componentType": "images",
+                        "componentVariant": "classic",
+                        "componentSpan": 1,
+                        "sortOrder": 0,
+                        "isVisible": true,
+                        "settings": {
+                            "showThumbnails": true,
+                            "imageSize": "medium",
+                            "variant": "classic"
+                        }
+                    }
+                ]
+            },
+            {
+                "columnIndex": 1,
+                "columnWidth": 1,
+                "columnTitle": "Details Column",
+                "components": [
+                    {
+                        "componentType": "details",
+                        "componentVariant": "standard",
+                        "componentSpan": 1,
+                        "sortOrder": 0,
+                        "isVisible": true,
+                        "settings": {
+                            "showPrice": true,
+                            "showFeatures": true,
+                            "layout": "vertical",
+                            "variant": "standard"
+                        }
+                    }
+                ]
+            },
+            {
+                "columnIndex": 2,
+                "columnWidth": 1,
+                "columnTitle": "Info Column",
+                "components": [
+                    {
+                        "componentType": "howToUse",
+                        "componentVariant": "simple",
+                        "componentSpan": 1,
+                        "sortOrder": 0,
+                        "isVisible": true,
+                        "settings": {
+                            "showIcon": true,
+                            "bgColor": "blue",
+                            "variant": "simple"
+                        }
+                    },
+                    {
+                        "componentType": "reviews",
+                        "componentVariant": "cards",
+                        "componentSpan": 1,
+                        "sortOrder": 1,
+                        "isVisible": true,
+                        "settings": {
+                            "showRating": true,
+                            "maxReviews": 3,
+                            "variant": "cards"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "productId": 2,
+        "layoutId": 124,
+        "layoutName": "Full Width Showcase",
+        "totalColumns": 3,
+        "columnGap": 4,
+        "componentGap": 4,
+        "rowGap": 6,
+        "columns": [
+            {
+                "columnIndex": 0,
+                "columnWidth": 3,
+                "columnTitle": "Showcase",
+                "components": [
+                    {
+                        "componentType": "images",
+                        "componentVariant": "showcase",
+                        "componentSpan": 3,
+                        "sortOrder": 0,
+                        "isVisible": true,
+                        "settings": {
+                            "showThumbnails": true,
+                            "imageSize": "large",
+                            "variant": "showcase"
+                        }
+                    },
+                    {
+                        "componentType": "details",
+                        "componentVariant": "detailed",
+                        "componentSpan": 3,
+                        "sortOrder": 1,
+                        "isVisible": true,
+                        "settings": {
+                            "showPrice": true,
+                            "showFeatures": true,
+                            "layout": "horizontal",
+                            "variant": "detailed"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

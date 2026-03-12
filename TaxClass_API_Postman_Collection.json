@@ -1,0 +1,408 @@
+{
+	"info": {
+		"_postman_id": "tax-class-api-collection",
+		"name": "TaxClass & TaxClassOption API Collection",
+		"description": "Complete API collection for testing TaxClass and TaxClassOption endpoints in the Diamond Web ecommerce platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tax Class APIs",
+			"item": [
+				{
+					"name": "Create Tax Class",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin token required"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Standard Tax\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tax-class",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class"
+							]
+						},
+						"description": "Creates a new tax class. Requires admin authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tax Classes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class?page=1&limit=10&search=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for pagination"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of items per page"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search term for tax class name"
+								}
+							]
+						},
+						"description": "Retrieves all tax classes with pagination and search functionality."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tax Class by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class/{{tax_class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class",
+								"{{tax_class_id}}"
+							]
+						},
+						"description": "Retrieves a specific tax class by ID with its associated options."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tax Class",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin token required"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Tax Class Name\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tax-class/{{tax_class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class",
+								"{{tax_class_id}}"
+							]
+						},
+						"description": "Updates an existing tax class. Requires admin authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tax Class",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin token required"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class/{{tax_class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class",
+								"{{tax_class_id}}"
+							]
+						},
+						"description": "Soft deletes a tax class. Requires admin authentication. Cannot delete if tax class has options."
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for managing tax classes"
+		},
+		{
+			"name": "Tax Class Option APIs",
+			"item": [
+				{
+					"name": "Create Tax Class Option",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin token required"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"class_id\": \"{{tax_class_id}}\",\n  \"tax_name\": \"VAT\",\n  \"country_id\": \"US\",\n  \"state_id\": \"CA\",\n  \"city_id\": null,\n  \"postal_code\": null,\n  \"priority\": 1,\n  \"is_compound\": false,\n  \"is_shipping\": true,\n  \"rate\": 10.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tax-class-option",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class-option"
+							]
+						},
+						"description": "Creates a new tax class option. Requires admin authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tax Class Options",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class-option?page=1&limit=10&class_id=&country_id=&state_id=&city_id=&is_shipping=&is_compound=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class-option"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for pagination"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of items per page"
+								},
+								{
+									"key": "class_id",
+									"value": "",
+									"description": "Filter by tax class ID"
+								},
+								{
+									"key": "country_id",
+									"value": "",
+									"description": "Filter by country ID"
+								},
+								{
+									"key": "state_id",
+									"value": "",
+									"description": "Filter by state ID"
+								},
+								{
+									"key": "city_id",
+									"value": "",
+									"description": "Filter by city ID"
+								},
+								{
+									"key": "is_shipping",
+									"value": "",
+									"description": "Filter by shipping tax (true/false)"
+								},
+								{
+									"key": "is_compound",
+									"value": "",
+									"description": "Filter by compound tax (true/false)"
+								}
+							]
+						},
+						"description": "Retrieves all tax class options with pagination and filtering."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tax Class Option by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class-option/{{tax_option_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class-option",
+								"{{tax_option_id}}"
+							]
+						},
+						"description": "Retrieves a specific tax class option by ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tax Class Option",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin token required"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tax_name\": \"Updated VAT\",\n  \"rate\": 12.0,\n  \"priority\": 2,\n  \"is_shipping\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tax-class-option/{{tax_option_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class-option",
+								"{{tax_option_id}}"
+							]
+						},
+						"description": "Updates an existing tax class option. Requires admin authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tax Class Option",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin token required"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class-option/{{tax_option_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class-option",
+								"{{tax_option_id}}"
+							]
+						},
+						"description": "Deletes a tax class option. Requires admin authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tax Options by Class ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tax-class-option/class/{{tax_class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tax-class-option",
+								"class",
+								"{{tax_class_id}}"
+							]
+						},
+						"description": "Retrieves all tax options for a specific tax class."
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for managing tax class options"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"description": "Base URL for the API (change to your server URL)"
+		},
+		{
+			"key": "admin_token",
+			"value": "your_admin_jwt_token_here",
+			"description": "Admin JWT token for authentication"
+		},
+		{
+			"key": "tax_class_id",
+			"value": "replace_with_actual_tax_class_id",
+			"description": "Tax Class ID for testing (replace with actual ID from created tax class)"
+		},
+		{
+			"key": "tax_option_id",
+			"value": "replace_with_actual_tax_option_id",
+			"description": "Tax Option ID for testing (replace with actual ID from created tax option)"
+		}
+	]
+}

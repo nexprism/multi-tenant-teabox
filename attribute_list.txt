@@ -1,0 +1,29 @@
+1. order created
+  - phone 
+  - name 
+  - email
+  - orderId
+  - productName1
+  - productName2
+  - productName3
+  - orderTotal
+  - status
+
+2. order status update
+  - phone 
+  - name 
+  - email
+  - orderId
+  - productName1
+  - productName2
+  - productName3
+  - orderTotal
+  - status
+
+3. not ordered after adding item in cart for long times
+  - phone 
+  - name 
+  - email
+  - productName1
+  - time (1 week , 2 week , 1 month)
+

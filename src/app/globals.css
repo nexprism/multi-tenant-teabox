@@ -1,0 +1,224 @@
+@import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap'); */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono); */
+  
+  /* Veda Ayurvedic Theme Variables */
+  --font-manrope: "Manrope", sans-serif;
+  --color-veda-primary: #13ec5b;
+  --color-veda-background-light: #f6f8f6;
+  --color-veda-background-dark: #102216;
+  --color-veda-text-dark: #0d1b12;
+  --color-veda-text-secondary: #4c9a66;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --background: #0a0a0a; */
+    --foreground: #ededed;
+  }
+}
+@font-face {
+  font-family:'Bebas Neue';
+  src: url('/fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+.bebas {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Optional utility classes */
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+input{
+  color: black;
+}
+
+body{
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.heading{
+  font-size: 50px;
+  @media (min-width: 768px) {
+    font-size: 100px;
+  }
+  @media (min-width: 1024px) {
+    font-size: 130px;
+  }
+  font-weight: 900;
+  color: #000;
+  font-family: 'Bebas Neue', sans-serif;
+  margin-top: -2vh;
+  @media (min-width: 768px) {
+    margin-top: -4vh;
+  }
+  @media (min-width: 1024px) {
+    margin-top: -2.5rem;
+  }
+}
+
+.poppins-medium {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.poppins-semibold {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.poppins-bold {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+
+@font-face {
+  font-family: "ABCArizonaMix";
+  src: url("/fonts/ABCArizonaMix-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CullenGinto-Nord";
+  src: url("/fonts/CullenGinto-NordRegular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CullenGintoNormal";
+  src: url("/fonts/CullenGintoNormal-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CullenGintoNormal";
+  src: url("/fonts/CullenGintoNormal-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+button{
+  cursor: pointer;
+}
+
+/* h2{
+  color: #07490C;
+} */
+h1{
+  color: #07490C;
+}
+
+.greenOne{
+  background-color: #92BD78;
+}
+.greenTwo{
+  background-color: #07490C;
+}
+.greenThree{
+  background-color: #C7F169;
+}
+.accentOne{
+  background-color: #EA8932;
+}
+.accentTwo{
+  background-color: #2DA9E8;
+}
+
+.customBorder{
+  border: 2px solid #2DA9E8;
+}
+
+.bg {
+  background: #92BD78;
+}
+.text {
+  color: #3C950D;
+}
+.border{
+  border: 2px solid #92BD78;
+}
+.shadow{
+  box-shadow: 0 5px 8px #3d950d27;
+}
+.btn {
+  background-color: #07490C;
+}
+.cream {
+  background-color: #EFF3E4;
+}
+/* Hide scrollbar for all elements */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+
+  /* Chrome, Edge, Safari */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+

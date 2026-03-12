@@ -1,0 +1,660 @@
+{
+  "info": {
+    "name": "FAQ CRUD API",
+    "description": "Collection for testing FAQ CRUD operations with support for website and product FAQs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "subdomain",
+      "value": "tenant1",
+      "type": "string"
+    },
+    {
+      "key": "faqId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "65a1234567890abcdef12345",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get All FAQs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has faqs object', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.faqs).to.be.an('object');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get FAQs with Pagination",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs?page=1&limit=10&sort=createdAt&order=desc",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "sort",
+              "value": "createdAt"
+            },
+            {
+              "key": "order",
+              "value": "desc"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Website FAQs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs?type=website",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"],
+          "query": [
+            {
+              "key": "type",
+              "value": "website"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Product FAQs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs?type=product",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"],
+          "query": [
+            {
+              "key": "type",
+              "value": "product"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Active FAQs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs?status=active",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"],
+          "query": [
+            {
+              "key": "status",
+              "value": "active"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search FAQs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs?search=shipping",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"],
+          "query": [
+            {
+              "key": "search",
+              "value": "shipping"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get FAQs by Product",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs?product={{productId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"],
+          "query": [
+            {
+              "key": "product",
+              "value": "{{productId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Website FAQ",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What are your shipping policies?\",\n  \"answer\": \"We offer free shipping on orders over $50. Standard shipping takes 3-5 business days, and express shipping takes 1-2 business days. We ship to most locations worldwide.\",\n  \"type\": \"website\",\n  \"status\": \"active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has faq object', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.faq).to.be.an('object');",
+              "    pm.expect(jsonData.faq._id).to.exist;",
+              "    pm.expect(jsonData.faq.type).to.equal('website');",
+              "    ",
+              "    // Save the ID for subsequent requests",
+              "    pm.collectionVariables.set('faqId', jsonData.faq._id);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Product FAQ",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What materials is this product made from?\",\n  \"answer\": \"This product is made from high-quality, eco-friendly materials including organic cotton and recycled polyester. It's designed to be durable and sustainable.\",\n  \"type\": \"product\",\n  \"product\": \"{{productId}}\",\n  \"status\": \"active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has faq object with product reference', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.faq).to.be.an('object');",
+              "    pm.expect(jsonData.faq._id).to.exist;",
+              "    pm.expect(jsonData.faq.type).to.equal('product');",
+              "    pm.expect(jsonData.faq.product).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Return Policy FAQ",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What is your return policy?\",\n  \"answer\": \"We offer a 30-day return policy for most items. Items must be in original condition with tags attached. Refunds will be processed within 5-7 business days after we receive your return.\",\n  \"type\": \"website\",\n  \"status\": \"active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      }
+    },
+    {
+      "name": "Get FAQ by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs/{{faqId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs", "{{faqId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Response has faq object', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.faq).to.be.an('object');",
+              "    pm.expect(jsonData.faq._id).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update FAQ",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What are your updated shipping policies?\",\n  \"answer\": \"We offer free shipping on orders over $30 (updated from $50). Standard shipping takes 2-4 business days (improved delivery time), and express shipping takes 1-2 business days. We ship to most locations worldwide and now offer international express shipping.\",\n  \"status\": \"active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs/{{faqId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs", "{{faqId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('FAQ was updated', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.faq).to.be.an('object');",
+              "    pm.expect(jsonData.faq.question).to.include('updated');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update FAQ Status to Inactive",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"inactive\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs/{{faqId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs", "{{faqId}}"]
+        }
+      }
+    },
+    {
+      "name": "Delete FAQ",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs/{{faqId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs", "{{faqId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has success true', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "});",
+              "",
+              "pm.test('Success message is present', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('deleted successfully');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases - Invalid FAQ ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs/invalid-id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs", "invalid-id"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Response has success false', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "});",
+              "",
+              "pm.test('Error message about invalid ID', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('Invalid');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases - Missing Required Fields",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"Incomplete FAQ\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Response has success false', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "});",
+              "",
+              "pm.test('Error message about required fields', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('required');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases - Invalid Type",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"Test question\",\n  \"answer\": \"Test answer\",\n  \"type\": \"invalid-type\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Response has success false', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "});",
+              "",
+              "pm.test('Error message about invalid type', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('website');",
+              "    pm.expect(jsonData.message).to.include('product');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases - Product FAQ Missing Product ID",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"Product question without product ID\",\n  \"answer\": \"Test answer\",\n  \"type\": \"product\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/faqs",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "faqs"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('Response has success false', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "});",
+              "",
+              "pm.test('Error message about missing product', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('Product is required');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set subdomain header if needed",
+          "// pm.request.headers.add({key: 'X-Subdomain', value: pm.collectionVariables.get('subdomain')});"
+        ]
+      }
+    }
+  ]
+}

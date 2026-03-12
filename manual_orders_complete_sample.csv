@@ -1,0 +1,5 @@
+Username,Phone,Email,ProductName,VariantName,Quantity,Price,AddressLine1,AddressLine2,City,State,PostalCode,Country,PaymentMode,DeliveryOption,PaymentId
+Rahul Kumar,9876543210,rahul.kumar@example.com,Sugarcure Juice,1000 ML,2,599,123 MG Road,Near City Mall,Mumbai,Maharashtra,400001,India,COD,standard_delivery,
+Priya Sharma,9876543211,priya.sharma@example.com,Wireless Headphones,Black,1,1500,456 Park Avenue,Sector 15,Delhi,Delhi,110001,India,Prepaid,express_delivery,PAY123456
+Amit Patel,9876543212,amit.patel@example.com,Bluetooth Speaker,,3,2500,789 Lake View,Apartment 4B,Bangalore,Karnataka,560001,India,COD,standard_delivery,
+Sneha Reddy,9876543213,,Organic Green Tea,100g Pack,5,350,101 Garden Street,,Hyderabad,Telangana,500001,India,Prepaid,overnight_delivery,PAY789012

@@ -1,0 +1,3 @@
+Phone,ProductName,Username,Email,Quantity,Price,AddressLine1,City,State,PostalCode,Country,PaymentMode,DeliveryOption,PaymentId
+9876543210,Wireless Headphones,John Doe,john@example.com,1,1500,123 Main St,Mumbai,Maharashtra,400001,India,COD,standard_delivery,
+9876543211,Bluetooth Speaker,Jane Smith,jane@example.com,2,2500,456 Park Ave,Delhi,Delhi,110001,India,Prepaid,express_delivery,TXN123456
