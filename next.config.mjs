@@ -145,7 +145,10 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
-  turbopack: {},
+  turbopack: {
+    // Ensure turbopack uses this project directory as the workspace root
+    root: __dirname,
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);
