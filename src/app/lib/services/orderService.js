@@ -447,203 +447,10 @@ class OrderService {
   }
 
 
-  //autoBookSingleOrder
   async autoBookSingleOrder(order, conn, tenant) {
-
-     const ShippingModel =
-        conn.models.Shipping ||
-        conn.model("Shipping", require("../models/Shipping.js").shippingSchema);
-
-      // Attempt automatic shipment booking across available shipping methods (highest priority first)
-      let bookingResult = null;
-
-      //fetch shipping method priority wise and status active
-      const activeShippingMethods = await ShippingModel.find({
-        status: "active",
-      })
-        .sort({ priority: 1 })
-        .lean();
-
-        // console.log("Active shipping methods to attempt booking:", activeShippingMethods);
-
-      try {
-        const ShippingServiceModel =
-          conn.models.ShippingService ||
-          conn.model("ShippingService", require("../models/ShippingService.js").shippingServiceSchema);
-
-        for (const sh of activeShippingMethods) {
-          try {
-            const carrier = (sh.carrier || sh.name || "").toString().toLowerCase();
-            console.log(`Attempting shipment booking with carrier: ${carrier} (Shipping ID: ${sh._id})`);
-            // 1) DTDC: existing flow (use default services + availability)
-            if (carrier.includes("dtdc")) {
-              // Get default services for this shipping sorted by servicePriority (ascending)
-              const defaultServices = await ShippingServiceModel.find({
-                shippingId: sh._id,
-                status: "active",
-                isDefaultService: true,
-              })
-                .sort({ servicePriority: 1 })
-                .lean();
-
-              // console.log(`Default DTDC services for shipping ${sh._id}:`, defaultServices);  
-                
-             // if (!defaultServices || defaultServices.length === 0) continue;
-
-              // Call DTDC pincode availability / services API for this order
-              
-                // getDtdcServices expects an order shaped like: { data: { shippingAddress: { postalCode } } }
-                const dtdcOrder = {
-                data: order.toObject ? order.toObject() : order, // in case order is a Mongoose document, convert to plain object
-                };
-                const available = await this.getDtdcServices(dtdcOrder);
-              // console.log(`DTDC services available for shipping ${sh._id}:`, available);
-              const availableCodes = (available || []).map((a) => (a.code || a.name || "").toString());
-              // console.log(`Available DTDC services for shipping ${sh._id}:`, availableCodes);
-
-              // Match available services in order of priority and try creating shipment
-              let shipped = false;
-              for (const ds of defaultServices) {
-                const code = (ds.serviceCode || ds.serviceName || "").toString();
-                // console.log(`Trying DTDC service code ${code} for shipping ${sh._id}`);
-                if (!code) continue;
-                if (!availableCodes.includes(code)) continue;
-
-                // Try to create shipment using existing createShipment function
-                try {
-                  const resp = await this.createShipment(order, "DTDC", code);
-                  // console.log(`DTDC createShipment response for service code ${code} and shipping ${sh._id}:`, resp);
-                  if (resp && resp.success) {
-                    bookingResult = { shipping: sh, serviceCode: code, resp };
-                    shipped = true;
-                    //update isShipmentBooked to true in order
-                    await this.orderRepository.updateOrder(order._id, { isShipmentBooked: true });
-                    break;
-                  }
-                } catch (err) {
-                  // try next default service
-                  console.log(`Failed to book DTDC with service code ${code} for shipping ${sh._id}:`, err.message);
-                  continue;
-                }
-              }
-              // console.log(`DTDC booking result for shipping ${sh._id}:`, bookingResult);
-              // console.log(`DTDC shipped status for shipping ${sh._id}:`, shipped);
-
-              if (shipped) break; // stop trying further shippings
-              continue; // go to next shipping method if DTDC attempts failed
-            }
-
-            // 1.b) Bluedart: don't fetch services from DB — call Bluedart API and try available services
-            if (carrier.includes("bluedart")) {
-              try {
-                // Call Bluedart service availability function for this order
-                const bluedartOrder = {
-                  data: order.toObject ? order.toObject() : order, // in case order is a Mongoose document, convert to plain object
-                };
-                const availableBD = await this.getBluedartServices(bluedartOrder);
-                const availableCodesBD = (availableBD || []).map((a) => (a.code || a.name || "").toString());
-
-                if (!availableCodesBD || !availableCodesBD.length) continue;
-
-                // Try available Bluedart service codes in the order returned (priority order expected from API)
-                let shippedBD = false;
-                for (const code of availableCodesBD) {
-                  if (!code) continue;
-                  try {
-                    const resp = await this.createShipment(order, "BLUEDART", code);
-                    if (resp && resp.success) {
-                      bookingResult = { shipping: sh, serviceCode: code, resp };
-                      shippedBD = true;
-                      //update isShipmentBooked to true in order
-                      await this.orderRepository.updateOrder(order._id, { isShipmentBooked: true });
-                      break;
-                    }
-                  } catch (err) {
-                    // try next available service
-                    continue;
-                  }
-                }
-
-                if (shippedBD) break; // stop trying further shippings
-                continue;
-              } catch (err) {
-                // swallow bluedart errors and continue to next shipping
-                continue;
-              }
-            }
-
-            // 2) Delhivery (when shipping name or carrier contains "delivery")
-            if (carrier.includes("delivery")) {
-              try {
-                const destinationPincode = order?.shippingAddress?.postalCode || shippingAddress?.postalCode;
-                if (!destinationPincode) continue;
-
-                const agent = new https.Agent({ rejectUnauthorized: false });
-                const headers = { Authorization: `Token ${process.env.DELHIVERY_TOKEN}` };
-                const pinApi = `${process.env.DELHIVERY_PIN_API_URL || 'https://track.delhivery.com/c/api/pin-codes/json/?filter_codes='}${encodeURIComponent(destinationPincode)}`;
-
-                const pinResp = await axios.get(pinApi, { headers, httpsAgent: agent });
-                const data = pinResp?.data || {};
-
-                // Support multiple possible response shapes. Primary shape: data.delivery_codes[0].postal_code
-                const postal = (data.delivery_codes && data.delivery_codes[0] && data.delivery_codes[0].postal_code) || (data.data && data.data[0]) || data.delivery_codes && data.delivery_codes[0] || null;
-                if (!postal) continue;
-
-                const isOda = (postal.is_oda || postal.oda || '').toString().toUpperCase() === 'Y';
-                const codAvailable = (postal.cod || postal.cash || '').toString().toUpperCase() === 'Y';
-                const prepaidAvailable = (postal.pre_paid || postal.prepaid || '').toString().toUpperCase() === 'Y';
-                const pickupAvailable = (postal.pickup || '').toString().toUpperCase() === 'Y';
-
-                // Skip if ODA
-                if (isOda) continue;
-
-                // Check payment-mode specific availability
-                if (paymentMode === 'COD' && !codAvailable) continue;
-                if (paymentMode !== 'COD' && !prepaidAvailable) continue;
-
-                // At this point Delhivery reports the pin as serviceable for required payment mode
-                // Call existing createShipment - pass the shipping object as the 3rd param (createDelhiveryShipment expects shipping info)
-                try {
-                  const resp = await this.createShipment(order, "DELHIVERY", sh);
-                  if (resp && resp.success) {
-                    bookingResult = { shipping: sh, serviceCode: null, resp };
-
-                    //update isShipmentBooked to true in order
-                    await this.orderRepository.updateOrder(order._id, { isShipmentBooked: true });
-                    break; // stop trying further shippings
-                  }
-                } catch (err) {
-                  // failed to book with this shipping, continue to next shipping
-                  continue;
-                }
-              } catch (err) {
-                // if pin API or parsing fails for this shipping, skip to next
-                continue;
-              }
-            }
-
-            // otherwise, unsupported carrier for auto-booking in this flow
-          } catch (err) {
-            console.log(`Error processing shipping method ${sh._id} (${sh.name}):`, err.message);
-            // swallow per-shipping errors and continue to next shipping method
-            continue;
-          }
-        }
-      } catch (err) {
-        // if anything here fails, we continue silently and return success without booking
-      }
-
-        if (bookingResult) {
-      return {
-         success: true,
-         carrier: bookingResult.shipping?.carrier || bookingResult.shipping?.name,
-         data: bookingResult
-      };
-   }
-
-   return { success: false };
-
-    }
+    // Shipping flow disabled as per user request
+    return { success: true, message: "Auto-booking disabled" };
+  }
 
   async createOrder(data, conn, tenant) {
     try {
@@ -1176,44 +983,44 @@ class OrderService {
 
 
 
-      try {
-        // Only trigger auto-call for COD orders if enabled in settings
-        //consolle.log("Triggering auto-call for COD order", settings);
-        if (settings?.orderConfirmEnabled) {
-          const apiUrl = "https://obd-api.myoperator.co/obd-api-v1";
-          const payload = {
-            company_id: settings?.myOperatorCompanyId || "683aebae503f2118",
-            secret_token:
-              settings?.myOperatorSecretToken ||
-              "2a67cfdb278391cf9ae47a7fffd6b0ec8d93494ff0004051c0f328a501553c98",
-            type: "2",
-            number: "+91" + shippingAddress.phoneNumber, // fallback to shipping phone if user phone not present
-            public_ivr_id: settings?.myOperatorIvrId || "68b0383927f53564",
-          };
-          //consolle.log("User phone number:", user);
-          //consolle.log("Shipping address phone number:", shippingAddress);
-          //consolle.log("Auto-call payload:", payload);
-          // Use fetch or axios for HTTP request
-          const res = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-              "x-api-key":
-                settings?.myOperatorApiKey ||
-                "oomfKA3I2K6TCJYistHyb7sDf0l0F6c8AZro5DJh",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          });
+      // try {
+      //   // Only trigger auto-call for COD orders if enabled in settings
+      //   //consolle.log("Triggering auto-call for COD order", settings);
+      //   if (settings?.orderConfirmEnabled) {
+      //     const apiUrl = "https://obd-api.myoperator.co/obd-api-v1";
+      //     const payload = {
+      //       company_id: settings?.myOperatorCompanyId || "683aebae503f2118",
+      //       secret_token:
+      //         settings?.myOperatorSecretToken ||
+      //         "2a67cfdb278391cf9ae47a7fffd6b0ec8d93494ff0004051c0f328a501553c98",
+      //       type: "2",
+      //       number: "+91" + shippingAddress.phoneNumber, // fallback to shipping phone if user phone not present
+      //       public_ivr_id: settings?.myOperatorIvrId || "68b0383927f53564",
+      //     };
+      //     //consolle.log("User phone number:", user);
+      //     //consolle.log("Shipping address phone number:", shippingAddress);
+      //     //consolle.log("Auto-call payload:", payload);
+      //     // Use fetch or axios for HTTP request
+      //     const res = await fetch(apiUrl, {
+      //       method: "POST",
+      //       headers: {
+      //         "x-api-key":
+      //           settings?.myOperatorApiKey ||
+      //           "oomfKA3I2K6TCJYistHyb7sDf0l0F6c8AZro5DJh",
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(payload),
+      //     });
 
-          const result = await res.json();
-          //consolle.log("Auto-call API response:", result);
-          if (!result.success) {
-            //consolle.error("Auto-call API failed:", result);
-          }
-        }
-      } catch (err) {
-        //consolle.error("Auto-call order confirm error:", err.message);
-      }
+      //     const result = await res.json();
+      //     //consolle.log("Auto-call API response:", result);
+      //     if (!result.success) {
+      //       //consolle.error("Auto-call API failed:", result);
+      //     }
+      //   }
+      // } catch (err) {
+      //   //consolle.error("Auto-call order confirm error:", err.message);
+      // }
 
       const responseData = { order };
       if (typeof bookingResult !== 'undefined' && bookingResult && bookingResult.resp) {
@@ -1700,7 +1507,29 @@ class OrderService {
       if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new Error(`Invalid orderId: ${id}`);
       }
-      const updatedOrder = await this.orderRepository.updateOrder(id, data);
+      // Only update order status as per simplified functionality
+      const updateData = {};
+      if (data.status) {
+        updateData.status = data.status;
+      }
+
+      /*
+      // Shipping options disabled/commented out during update
+      if (data.shippingAddress) {
+        updateData.shippingAddress = data.shippingAddress;
+      }
+      if (data.shippingMethod) {
+        updateData.shippingMethod = data.shippingMethod;
+      }
+      if (data.deliveryOption) {
+        updateData.deliveryOption = data.deliveryOption;
+      }
+      if (data.shipping_details) {
+        updateData.shipping_details = data.shipping_details;
+      }
+      */
+
+      const updatedOrder = await this.orderRepository.updateOrder(id, updateData);
       return {
         success: true,
         message: "Order updated successfully",
