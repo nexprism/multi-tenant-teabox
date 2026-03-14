@@ -353,7 +353,7 @@ export default function CheckoutPage() {
     try {
       if (paymentMethod === "prepaid") {
         const options = {
-          key: "rzp_test_1DP5mmOlF5G5ag",
+          key: "rzp_test_SPTvNCnEWS87X0",
           amount: Math.round(total * 100), // Use the calculated total which includes everything
           currency: "INR",
           currency: "INR",

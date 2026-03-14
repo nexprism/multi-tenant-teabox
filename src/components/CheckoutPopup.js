@@ -429,7 +429,7 @@ export default function CheckoutPopup() {
     try {
       if (paymentMethod === "prepaid") {
         const options = {
-          key: "rzp_test_1DP5mmOlF5G5ag",
+          key: "rzp_test_SPTvNCnEWS87X0",
           amount: Math.round(total * 100), // Use the calculated total which includes everything
           currency: "INR",
           currency: "INR",
@@ -2268,13 +2268,9 @@ export default function CheckoutPopup() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                if (pinCodeVerified?.success) {
-                  handelPayment();
-                } else {
-                  checkPincode();
-                }
+                handelPayment();
               }}
-              disabled={placingOrder || pincodeChecking}
+              disabled={placingOrder}
               className={`w-full mt-4  text-sm greenTwo text-white py-3 rounded-md  transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
             >
               {placingOrder ? (
@@ -2282,12 +2278,8 @@ export default function CheckoutPopup() {
                   <LoadingSpinner />
                   <span>Placing Order...</span>
                 </>
-              ) : pincodeChecking ? (
-                "Checking..."
-              ) : pinCodeVerified?.success ? (
-                `  Place Order (₹${total?.toFixed(2)})`
               ) : (
-                "Check Pincode"
+                `  Place Order (₹${total?.toFixed(2)})`
               )}
             </button>
           )}

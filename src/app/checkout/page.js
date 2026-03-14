@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { use, useEffect, useRef, useState } from "react";
 import {
@@ -377,7 +377,7 @@ function CheckoutPageContent() {
     try {
       if (paymentMethod === "prepaid") {
         const options = {
-          key: "rzp_test_1DP5mmOlF5G5ag",
+          key: "rzp_test_SPTvNCnEWS87X0",
           amount: Math.round(total * 100), // Use the calculated total which includes everything
           currency: "INR",
           currency: "INR",
@@ -1519,29 +1519,18 @@ function CheckoutPageContent() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      if (pinCodeVerified?.success) {
-                        handelPayment();
-                      } else {
-                        checkPincode();
-                      }
+                      handelPayment();
                     }}
-                    disabled={placingOrder || pincodeChecking}
-                    className={`w-full py-4 rounded-lg font-bold text-white shadow-lg transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${pinCodeVerified?.success
-                      ? "greenTwo hover:opacity-90 shadow-green-200"
-                      : "greenTwo hover:opacity-90 shadow-blue-200"
-                      }`}
+                    disabled={placingOrder}
+                    className={`w-full py-4 rounded-lg font-bold text-white shadow-lg transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 greenTwo hover:opacity-90 shadow-green-200`}
                   >
                     {placingOrder ? (
                       <>
                         <LoadingSpinner />
                         <span>Placing Order...</span>
                       </>
-                    ) : pincodeChecking ? (
-                      "Checking..."
-                    ) : pinCodeVerified?.success ? (
-                      <span className="flex items-center justify-center gap-1">PLACE ORDER &bull; <IndianRupee size={18} strokeWidth={3} /> {total.toFixed(2)}</span>
                     ) : (
-                      "CHECK PINCODE"
+                      <span className="flex items-center justify-center gap-1">PLACE ORDER &bull; <IndianRupee size={18} strokeWidth={3} /> {total.toFixed(2)}</span>
                     )}
                   </button>
                 )}
