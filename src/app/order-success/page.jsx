@@ -36,7 +36,7 @@ const OrderSuccessPage = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">No Order Information Found</h2>
           <Link href="/search">
-            <button className="bg-[#3C950D] text-white px-6 py-2 rounded-full font-semibold">
+            <button className="bg-site text-white px-6 py-2 rounded-full font-semibold">
               Continue Shopping
             </button>
           </Link>
@@ -93,7 +93,7 @@ const OrderSuccessPage = () => {
           <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                <Package className="w-6 h-6 text-[#3C950D]" />
+                <Package className="w-6 h-6 text-site" />
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">Order ID</p>
@@ -102,14 +102,14 @@ const OrderSuccessPage = () => {
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-600 mb-1">Status</p>
-              <p className="text-lg font-semibold text-[#3C950D] capitalize">{currentOrder?.status || "Processing"}</p>
+              <p className="text-lg font-semibold text-site capitalize">{currentOrder?.status || "Processing"}</p>
             </div>
           </div>
 
           {currentOrder && (
             <div className="border-t border-gray-200 pt-6">
               <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5 text-[#3C950D]" />
+                <ShoppingBag className="w-5 h-5 text-site" />
                 Order Summary
               </h3>
               <div className="space-y-4 mb-6">
@@ -141,7 +141,7 @@ const OrderSuccessPage = () => {
                 )}
                 <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-2 mt-2">
                   <span className="text-gray-800">Total Amount</span>
-                  <span className="text-[#3C950D]">₹{currentOrder.total}</span>
+                  <span className="text-site">₹{currentOrder.total}</span>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@ const OrderSuccessPage = () => {
 
           <div className="space-y-4">
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-[#3C950D] text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
+              <div className="w-8 h-8 bg-site text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
                 1
               </div>
               <div>
@@ -179,7 +179,7 @@ const OrderSuccessPage = () => {
             </div>
 
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-[#3C950D] text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
+              <div className="w-8 h-8 bg-site text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
                 2
               </div>
               <div>
@@ -191,7 +191,7 @@ const OrderSuccessPage = () => {
             </div>
 
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-[#3C950D] text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
+              <div className="w-8 h-8 bg-site text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
                 3
               </div>
               <div>
@@ -203,7 +203,7 @@ const OrderSuccessPage = () => {
             </div>
 
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 bg-[#3C950D] text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
+              <div className="w-8 h-8 bg-site text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
                 4
               </div>
               <div>
@@ -219,7 +219,7 @@ const OrderSuccessPage = () => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/my-orders" className="flex-1 sm:flex-initial">
-            <button className="w-full bg-[#3C950D] hover:bg-green-700 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+            <button className="w-full bg-site hover:bg-green-700 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
               <Package className="w-5 h-5" />
               View My Orders
               <ArrowRight className="w-4 h-4" />
@@ -244,7 +244,7 @@ const OrderSuccessPage = () => {
         {/* Support Section */}
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-2">Need help with your order?</p>
-          <Link href="/contact" className="text-[#3C950D] font-semibold hover:underline">
+          <Link href="/contact" className="text-site font-semibold hover:underline">
             Contact our support team
           </Link>
         </div>

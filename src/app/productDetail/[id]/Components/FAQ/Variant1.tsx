@@ -109,7 +109,7 @@ export default function Variant1({ productData }: { productData?: any }) {
         <div className="text-center mt-6">
           <button
             onClick={toggleShowAll}
-            className="px-6 py-2 bg-[#3C950D] text-white rounded-lg hover:bg-[#2d7009] transition-colors font-medium"
+            className="px-6 py-2 bg-site text-white rounded-lg hover:bg-[#2d7009] transition-colors font-medium"
           >
             {showAll ? "View Less" : `View More (${faqs.length - maxVisible} more)`}
           </button>

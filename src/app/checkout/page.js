@@ -312,6 +312,7 @@ function CheckoutPageContent() {
           postalCode: formData.pincode,
           country: formData.country || "India",
           phoneNumber: formData.phone,
+          email: formData.email,
         },
         billingAddress: {
           fullName: `${formData.firstName} ${formData.lastName}`,
@@ -322,6 +323,7 @@ function CheckoutPageContent() {
           postalCode: formData.pincode,
           country: formData.country || "India",
           phoneNumber: formData.phone,
+          email: formData.email,
         },
         deliveryOption: "standard_delivery",
       };
@@ -417,6 +419,7 @@ function CheckoutPageContent() {
                   postalCode: formData.pincode,
                   country: formData.country || "India",
                   phoneNumber: formData.phone,
+                  email: formData.email,
                 },
                 billingAddress: {
                   fullName: `${formData.firstName} ${formData.lastName}`,
@@ -427,6 +430,7 @@ function CheckoutPageContent() {
                   postalCode: formData.pincode,
                   country: formData.country || "India",
                   phoneNumber: formData.phone,
+                  email: formData.email,
                 },
                 paymentDetails: response.razorpay_payment_id,
                 deliveryOption: "standard_delivery",
@@ -544,6 +548,7 @@ function CheckoutPageContent() {
               postalCode: formData.pincode,
               country: formData.country || "India",
               phoneNumber: formData.phone,
+              email: formData.email,
             },
             billingAddress: {
               fullName: `${formData.firstName} ${formData.lastName}`,
@@ -554,6 +559,7 @@ function CheckoutPageContent() {
               postalCode: formData.pincode,
               country: formData.country || "India",
               phoneNumber: formData.phone,
+              email: formData.email,
             },
             deliveryOption: "standard_delivery",
           };

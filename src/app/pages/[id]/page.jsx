@@ -31,7 +31,7 @@ function Page() {
       <div className="max-w-4xl mx-auto px-6 py-16 sm:px-8 lg:px-12">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="w-12 h-12 border-4 border-gray-200 border-t-[#3c950d] rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-gray-200 border-t-site rounded-full animate-spin"></div>
             <p className="mt-4 text-gray-500 text-sm">Loading...</p>
           </div>
         ) : (
@@ -41,7 +41,7 @@ function Page() {
               <h1 className="poppins text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
                 {data?.title || "Untitled Page"}
               </h1>
-              <div className="mt-4 w-20 h-1 bg-gradient-to-r from-[#3c950d] to-green-400 rounded-full"></div>
+              <div className="mt-4 w-20 h-1 bg-gradient-to-r from-site to-green-400 rounded-full"></div>
             </div>
 
             {/* Content Section */}

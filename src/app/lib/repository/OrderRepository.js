@@ -92,7 +92,7 @@ class OrderRepository extends CrudRepository {
         throw new Error(`Invalid productId: ${productId}`);
       }
 
-      const found = await Product.findById(productId).select("price");
+      const found = await Product.findById(productId).select("price name sku");
       if (!found) {
         throw new Error(`Product ${productId} not found`);
       }
@@ -272,7 +272,7 @@ class OrderRepository extends CrudRepository {
         throw new Error(`Invalid variantId: ${variantId}`);
       }
 
-      const variant = await Variant.findById(variantId).select("price");
+      const variant = await Variant.findById(variantId).select("price name sku");
       if (!variant) {
         throw new Error(`Variant ${variantId} not found`);
       }

@@ -74,7 +74,7 @@ function DynamicHomepage2() {
         return (
           <div
             key={_id}
-            className=" mx-auto px-4 bg-gradient-to-br from-[#3C950D]/5 via-transparent to-[#3C950D]/5"
+            className=" mx-auto px-4 bg-gradient-to-br from-site/5 via-transparent to-site/5"
           >
             <WhyUs content={content} />
           </div>
@@ -84,7 +84,7 @@ function DynamicHomepage2() {
         return (
           <div
             key={_id}
-            className=" mx-auto px-4 bg-gradient-to-br from-[#3C950D]/5 via-transparent to-[#3C950D]/5"
+            className=" mx-auto px-4 bg-gradient-to-br from-site/5 via-transparent to-site/5"
           >
             <Features content={content} />
           </div>

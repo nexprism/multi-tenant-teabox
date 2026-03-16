@@ -108,7 +108,7 @@ export function TimerBanner({ content }) {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-[#3C950D] to-[#2d7009] rounded-full text-sm tracking-wider uppercase shadow-lg"
+            className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-site to-[#2d7009] rounded-full text-sm tracking-wider uppercase shadow-lg"
           >
             {content?.tagline || "Limited Time Only"}
           </motion.div>
@@ -148,7 +148,7 @@ export function TimerBanner({ content }) {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
-              <Button className="bg-gradient-to-r from-[#3C950D] to-[#2d7009] hover:from-[#2d7009] hover:to-[#3C950D] text-white px-8 py-6 text-lg shadow-2xl hover:shadow-[#3C950D]/50 transition-all hover:scale-105">
+              <Button className="bg-gradient-to-r from-site to-[#2d7009] hover:from-[#2d7009] hover:to-site text-white px-8 py-6 text-lg shadow-2xl hover:shadow-site/50 transition-all hover:scale-105">
                 {content?.cta?.title || "Shop Now"}
               </Button>
             </motion.div>

@@ -9,6 +9,7 @@ const categoryPaymentSettingSchema = new mongoose.Schema(
   { _id: false }
 );
 
+
 const settingSchema = new mongoose.Schema(
   {
     tenant: { type: String, required: true, index: true }, // subdomain or tenant id
@@ -30,16 +31,20 @@ const settingSchema = new mongoose.Schema(
     codAllowed: { type: Boolean, default: true }, // New field to allow/disallow COD globally
     gstCharge: { type: Number, default: 0 },
     paymentGatewayCharge: { type: Number, default: 0 },
-    
+
+    // Logo and Website Color
+    logo: { type: String, default: null }, // File path or URL to logo image
+    websiteColor: { type: String, default: "#000000" }, // Hex color code
+
     // Prepaid Discount Settings
     prepaidDiscountEnabled: { type: Boolean, default: false },
-    prepaidDiscountType: { 
-      type: String, 
-      enum: ["percentage", "amount"], 
-      default: "percentage" 
+    prepaidDiscountType: {
+      type: String,
+      enum: ["percentage", "amount"],
+      default: "percentage"
     },
     prepaidDiscountValue: { type: Number, default: 0 }, // Percentage (e.g., 20 for 20%) or fixed amount
-    
+
     categoryPaymentSettings: [categoryPaymentSettingSchema],
 
     // Meta (Facebook) CRM/Ads Integration

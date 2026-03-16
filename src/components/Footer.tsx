@@ -21,6 +21,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import axiosInstance from "@/axiosConfig/axiosInstance";
 import store from "@/app/store";
+import { getImageUrl } from "@/app/utils/imageHelper";
 
 export default function Footer() {
   const { list } = useSelector((state: any) => state.pages);
@@ -36,6 +37,20 @@ export default function Footer() {
   useEffect(() => {
     dispatch(fetchPages());
   }, [dispatch]);
+  const siteLogo = getImageUrl(settings?.logo || "");
+  const siteColor = settings?.websiteColor || "#3C950D";
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      try {
+        document.documentElement.style.setProperty('--site-color', siteColor);
+        const favs = document.querySelectorAll("link[rel~='icon']");
+        favs.forEach((el) => {
+          if (siteLogo) el.href = siteLogo;
+        });
+      } catch (e) {}
+    }
+  }, [siteLogo, siteColor]);
   // Order the top-level page groups so important sections appear first.
   // We normalize using either `mainTitle` (if present) or `_id` and replace hyphens.
   const orderedTitles = [
@@ -143,8 +158,8 @@ export default function Footer() {
   return (
     <footer className={`bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden ${pathname.includes("/productDetail") ? "mb-[97px]" : "mb-0"}`}>
       {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-[#3C950D]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#3C950D]/10 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-64 h-64 rounded-full blur-3xl" style={{ backgroundColor: siteColor + '1A' }} />
+      <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-3xl" style={{ backgroundColor: siteColor + '1A' }} />
 
       <div className="container mx-auto px-4 py-10 pb-4 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
@@ -158,14 +173,14 @@ export default function Footer() {
             <div className="flex items-center gap-2 mb-4">
               <div className="w-12 h-12 rounded-full flex items-center justify-center ">
                 <Image
-                  src="/logo.webp"
-                  alt="TeaHaven Logo"
+                  src={siteLogo || "/logo.webp"}
+                  alt="Site Logo"
                   width={30}
                   height={30}
                   className="object-contain h-full w-full"
                 />
               </div>
-              <span className="text-[#3C950D] capitalize text-xl tracking-tight">
+              <span style={{ color: siteColor }} className="capitalize text-xl tracking-tight">
                 {companyName}
               </span>
             </div>
@@ -186,7 +201,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.2, rotate: 5 }}
                   transition={{ duration: 0.2 }}
-                  className="w-10 h-10 bg-gray-800 hover:bg-gradient-to-br hover:from-[#3C950D] hover:to-[#2d7009] rounded-full flex items-center justify-center transition-all shadow-lg"
+                  className="w-10 h-10 bg-gray-800 hover:bg-gradient-to-br hover:from-site hover:to-[#2d7009] rounded-full flex items-center justify-center transition-all shadow-lg"
                 >
                   <Icon className="w-5 h-5" />
                 </motion.a>
@@ -208,7 +223,7 @@ export default function Footer() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  <h3 className="mb-6 capitalize bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+                  <h3 className="mb-6 capitalize bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
                     {(item?.mainTitle ?? item?._id ?? "")
                       .toString()
                       .replace(/-/g, " ")}
@@ -240,7 +255,7 @@ export default function Footer() {
                             {page.contactData?.phone}
                           </a>
                           <Link
-                            className="text-gray-400 hover:text-[#3C950D] transition-colors flex items-center gap-2 group"
+                            className="text-gray-400 hover:text-site transition-colors flex items-center gap-2 group"
                             href={`contact`}
                           >
                             contact us
@@ -259,7 +274,7 @@ export default function Footer() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                <h3 className="mb-6 capitalize bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+                <h3 className="mb-6 capitalize bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
                   {(item?.mainTitle ?? item?._id ?? "")
                     .toString()
                     .replace(/-/g, " ")}
@@ -276,9 +291,9 @@ export default function Footer() {
                                 ? `/${page.slug}`
                                 : `/pages/${page._id}`
                             }
-                            className="text-gray-400 hover:text-[#3C950D] transition-colors flex items-center gap-2 group"
+                            className="text-gray-400 hover:text-site transition-colors flex items-center gap-2 group"
                           >
-                            <span className="w-0 h-0.5 bg-[#3C950D] capitalize group-hover:w-2 transition-all" />
+                            <span className="w-0 h-0.5 bg-site capitalize group-hover:w-2 transition-all" />
                             {page.title}
                           </a>
                         </li>
@@ -295,7 +310,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="mb-6 col-span-2 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+            <h3 className="mb-6 col-span-2 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
               Newsletter
             </h3>
             <p className="text-gray-400 text-sm mb-4">
@@ -317,7 +332,7 @@ export default function Footer() {
               <Button
                 type="submit"
                 disabled={newsletterLoading || !newsletterEmail.trim()}
-                className="bg-gradient-to-r from-[#3C950D] to-[#2d7009] hover:from-[#2d7009] hover:to-[#3C950D] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-site to-[#2d7009] hover:from-[#2d7009] hover:to-site shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {newsletterLoading ? "Subscribing..." : "Subscribe"}
               </Button>
@@ -338,7 +353,7 @@ export default function Footer() {
               ].map(({ Icon, text }, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 text-gray-400 hover:text-[#3C950D] transition-colors"
+                  className="flex items-center gap-3 text-gray-400 hover:text-site transition-colors"
                 >
                   <Icon className="w-4 h-4" />
                   <span>{text}</span>

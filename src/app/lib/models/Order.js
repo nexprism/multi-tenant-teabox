@@ -34,6 +34,7 @@ const addressSchema = new mongoose.Schema(
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
     phoneNumber: { type: String, required: true },
+    email: { type: String, required: false },
   },
   { _id: false }
 );
@@ -131,7 +132,7 @@ const orderSchema = new mongoose.Schema(
       default: false,
     },
     shipping_details: {
-      platform: { type: String, enum: ['dtdc', 'delhivery', 'bluedart', null], default: null },
+      platform: { type: String, enum: ['dtdc', 'delhivery', 'bluedart', 'shiprocket', null], default: null },
       reference_number: { type: String, default: null }, // e.g., AWB, order_ref, consignment_no
       tracking_url: { type: String, default: null },
       raw_response: { type: Object, default: null }, // Store full API response safely

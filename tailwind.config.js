@@ -15,7 +15,7 @@ export default {
         bebas: ['Bebas Neue', 'sans-serif'],
       },
       colors: {
-        fontGreen: '#3C950D',
+        fontGreen: 'var(--site-color, #3C950D)',
       },
     },
   },

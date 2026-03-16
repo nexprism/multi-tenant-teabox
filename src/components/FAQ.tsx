@@ -39,7 +39,7 @@ export function FAQ({ content }) {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
             Frequently Asked Questions
           </h2>
           <p className="text-gray-600">
@@ -67,7 +67,7 @@ export function FAQ({ content }) {
                   value={`item-${index}`}
                   className="bg-white/80 backdrop-blur-sm border-0 shadow-lg rounded-xl px-6 hover:shadow-xl transition-shadow"
                 >
-                  <AccordionTrigger className="hover:text-[#3C950D] hover:no-underline">
+                  <AccordionTrigger className="hover:text-site hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600 leading-relaxed">
@@ -89,7 +89,7 @@ export function FAQ({ content }) {
             >
               <button
                 onClick={toggleShowAll}
-                className="px-6 py-2 bg-gradient-to-r from-[#3C950D] to-[#2d7009] text-white rounded-lg hover:from-[#2d7009] hover:to-[#3C950D] transition-all font-medium shadow-lg hover:shadow-xl"
+                className="px-6 py-2 bg-gradient-to-r from-site to-[#2d7009] text-white rounded-lg hover:from-[#2d7009] hover:to-site transition-all font-medium shadow-lg hover:shadow-xl"
               >
                 {showAll ? "View Less" : `View More (${faqs.length - maxVisible} more)`}
               </button>

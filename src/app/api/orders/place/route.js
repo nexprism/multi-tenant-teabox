@@ -20,6 +20,7 @@ import { generateInvoiceHtml } from "../../../lib/utils/invoiceGenerator.js";
 import UserService from "@/app/lib/services/userService.js";
 
 export async function POST(req) {
+  console.log("[API] /api/orders/place POST handler called");
   try {
     const tenant = req.headers.get("x-tenant");
     const body = await req.json();

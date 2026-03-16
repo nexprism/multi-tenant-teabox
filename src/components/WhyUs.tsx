@@ -18,7 +18,7 @@ export function WhyUs({ content }) {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
             {content?.title || "Why Choose Us?"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-4xl mx-auto">

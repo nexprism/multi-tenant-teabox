@@ -5,11 +5,12 @@ class SettingService {
     this.settingRepository = settingRepository;
   }
 
-  async getSetting(tenant) {
-    return await this.settingRepository.getSetting(tenant);
+  async getSetting(tenant, conn) {
+    // allow optional connection forwarded by controller
+    return await this.settingRepository.getSetting(tenant, conn);
   }
 
-  async updateSetting(tenant, data) {
+  async updateSetting(tenant, data, conn) {
     // Use the provided tenant. If it ends with 'admin', strip that suffix.
     let checkTenant = typeof tenant === "string" ? tenant : "";
     let newTenant = checkTenant;
@@ -18,13 +19,13 @@ class SettingService {
     } // Persist using the cleaned tenant value when available.
     // Persist using the cleaned tenant value when available.
     const tenantToUse = newTenant || tenant;
-    
+
     // If the tenant is 'admin', update ALL tenants
     if (tenantToUse === 'admin') {
       return await this.settingRepository.updateAllSettings(data);
     }
-    
-    return await this.settingRepository.updateSetting(tenantToUse, data);
+
+    return await this.settingRepository.updateSetting(tenantToUse, data, conn);
   }
 }
 

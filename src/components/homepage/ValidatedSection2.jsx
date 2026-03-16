@@ -46,7 +46,7 @@ export default function ValidatedSection2({ content }) {
         {/* Header Section */}
         <div className="flex justify-between flex-col max-w-4xl mx-auto text-center items-start mb-16">
           <div className="flex-1 mx-auto">
-            <h1 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent text-center">
+            <h1 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent text-center">
               {content?.title}
             </h1>
           </div>

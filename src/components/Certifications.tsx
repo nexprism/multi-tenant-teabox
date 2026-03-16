@@ -50,7 +50,7 @@ const itemVariants = {
 
 export function Certifications() {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-[#3C950D]/5">
+    <section className="py-20 bg-gradient-to-b from-white to-site/5">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,7 +59,7 @@ export function Certifications() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
             Our Certifications
           </h2>
           <p className="text-gray-600">
@@ -83,11 +83,11 @@ export function Certifications() {
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       transition={{ duration: 0.3 }}
-                      className="w-20 h-20 bg-gradient-to-br from-[#3C950D] to-[#2d7009] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:shadow-[#3C950D]/30"
+                      className="w-20 h-20 bg-gradient-to-br from-site to-[#2d7009] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:shadow-xl group-hover:shadow-site/30"
                     >
                       <Icon className="w-10 h-10 text-white" />
                     </motion.div>
-                    <h3 className="mb-1 group-hover:text-[#3C950D] transition-colors">
+                    <h3 className="mb-1 group-hover:text-site transition-colors">
                       {cert.title}
                     </h3>
                     <p className="text-gray-600 text-sm">{cert.description}</p>

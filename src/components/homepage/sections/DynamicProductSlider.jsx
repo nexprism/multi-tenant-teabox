@@ -593,7 +593,7 @@ const DynamicProductSlider = ({ content }) => {
 
                       <button
                         onClick={(e) => handleAddToCart(e, overlayProduct)}
-                        className="h-10 w-32 text-sm flex justify-center group items-center border hover:bg-[#3C950D]  rounded-lg"
+                        className="h-10 w-32 text-sm flex justify-center group items-center border hover:bg-site  rounded-lg"
                       >
                         Add to cart
                       </button>

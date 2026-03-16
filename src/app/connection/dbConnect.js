@@ -79,6 +79,7 @@ async function dbConnect(dbUri) {
           ensure("Product", "../lib/models/Product.js"),
           ensure("Ticket", "../lib/models/Ticket.js"),
           ensure("Lead", "../lib/models/Lead.js"),
+          ensure("Setting", "../lib/models/Setting.js"),
         ]);
       }
     } catch (err) {

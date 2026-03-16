@@ -61,7 +61,7 @@ export function Features({ content }) {
           transition={{ duration: 0.6 }}
           className="text-center mb-12 md:hidden block"
         >
-          <h1 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
             {content?.title || "Why Choose Us?"}
           </h1>
           <p className="text-gray-600">
@@ -86,12 +86,12 @@ export function Features({ content }) {
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
-                      className="w-20 h-20 bg-gradient-to-br from-[#3C950D] to-[#2d7009] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:shadow-[#3C950D]/30"
+                      className="w-20 h-20 bg-gradient-to-br from-site to-[#2d7009] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:shadow-site/30"
                     >
                       {/* <Icon className="w-10 h-10 text-white" /> */}
                       <h2 className="text-xl text-white"> {`0${index + 1}`}</h2>
                     </motion.div>
-                    <h3 className="mb-3 group-hover:text-[#3C950D] transition-colors">
+                    <h3 className="mb-3 group-hover:text-site transition-colors">
                       {feature.title}
                     </h3>
                     <p className="text-gray-600 text-sm leading-relaxed">

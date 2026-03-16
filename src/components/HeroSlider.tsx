@@ -99,7 +99,7 @@ export function HeroSlider({ content }) {
                         : "/search"
                     }
                   >
-                    <Button className="bg-gradient-to-r from-[#3C950D] to-[#2d7009] hover:from-[#2d7009] hover:to-[#3C950D] px-8 py-6 text-lg shadow-2xl hover:shadow-[#3C950D]/50 hover:scale-105 transition-all">
+                    <Button className="bg-gradient-to-r from-site to-[#2d7009] hover:from-[#2d7009] hover:to-site px-8 py-6 text-lg shadow-2xl hover:shadow-site/50 hover:scale-105 transition-all">
                       {content?.[currentSlide]?.content?.cta?.title ||
                         "Shop Now"}
                     </Button>

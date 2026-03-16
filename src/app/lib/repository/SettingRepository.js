@@ -5,13 +5,37 @@ class SettingRepository {
     this.model = model;
   }
 
-  async getSetting(tenant) {
-    console?.log("here the tenant",tenant);
-    return await this.model.findOne({ tenant });
+  async getSetting(tenant, conn) {
+    let Model = this.model;
+    if (conn) {
+      if (!conn.models.Setting) {
+        conn.model("Setting", this.model.schema);
+      }
+      Model = conn.models.Setting;
+    }
+
+    try {
+      console?.log('[SettingRepository] getSetting using', Model.modelName || 'Model', 'for tenant', tenant, 'on conn host:', conn?.host);
+    } catch (e) {}
+    
+    // Prefer the most recently updated document for the tenant in case duplicates exist
+    return await Model.findOne({ tenant }).sort({ updatedAt: -1 });
   }
 
-  async updateSetting(tenant, data) {
-    return await this.model.findOneAndUpdate({ tenant }, data, { new: true, upsert: true });
+  async updateSetting(tenant, data, conn) {
+    let Model = this.model;
+    if (conn) {
+      // If the model isn't registered on the tenant DB yet, ensure we register it
+      if (!conn.models.Setting) {
+        conn.model("Setting", this.model.schema);
+      }
+      Model = conn.models.Setting;
+    }
+    
+    try {
+      console?.log('[SettingRepository] updateSetting using', Model.modelName || 'Model', 'for tenant', tenant, 'on conn host:', conn?.host);
+    } catch (e) {}
+    return await Model.findOneAndUpdate({ tenant }, data, { new: true, upsert: true });
   }
 
   async updateAllSettings(data) {

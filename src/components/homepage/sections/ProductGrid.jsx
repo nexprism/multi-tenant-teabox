@@ -74,14 +74,14 @@ const ProductGrid = () => {
               {hasMore ? (
                 <button
                   onClick={handleLoadMore}
-                  className="bg-[#3C950D] text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200"
+                  className="bg-site text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200"
                 >
                   View More Products
                 </button>
               ) : (
                 <button
                   onClick={handleViewLess}
-                  className="bg-[#3C950D] text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200"
+                  className="bg-site text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200"
                 >
                   View Less Products
                 </button>

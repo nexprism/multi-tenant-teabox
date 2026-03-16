@@ -44,8 +44,8 @@ export function Reviews({ content }) {
   return (
     <>
       <section className="max-w-7xl mx-auto py-20  px-4 ">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-[#3C950D]/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#3C950D]/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-64 h-64 bg-site/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-site/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
         <div className="container mx-auto px-4 relative">
           <motion.div
@@ -55,7 +55,7 @@ export function Reviews({ content }) {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
               {content?.title || "What Our Customers Say"}
             </h2>
             <p className="text-gray-600">
@@ -75,13 +75,13 @@ export function Reviews({ content }) {
                 <Card className="hover:shadow-2xl transition-all duration-300 border-0 shadow-lg h-full group bg-white/80 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4 mb-4">
-                      <Avatar className="bg-gradient-to-br from-[#3C950D] to-[#2d7009] text-white w-12 h-12 shadow-lg">
-                        <AvatarFallback className="bg-gradient-to-br uppercase from-[#3C950D] to-[#2d7009] text-white">
+                      <Avatar className="bg-gradient-to-br from-site to-[#2d7009] text-white w-12 h-12 shadow-lg">
+                        <AvatarFallback className="bg-gradient-to-br uppercase from-site to-[#2d7009] text-white">
                           {review?.userId?.name?.[0] || "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h4 className="group-hover:text-[#3C950D] transition-colors">
+                        <h4 className="group-hover:text-site transition-colors">
                           {review?.userId?.name}
                         </h4>
                         <div className="flex gap-1">
@@ -128,7 +128,7 @@ export function Reviews({ content }) {
             backgroundImage: `url(https://images.unsplash.com/photo-1617266982722-28a0deb420c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWElMjBsZWF2ZXMlMjBjbG9zZXVwfGVufDF8fHx8MTc2MDQyMTExNnww&ixlib=rb-4.1.0&q=80&w=1080)`,
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#3C950D]/95 via-[#3C950D]/90 to-[#2d7009]/95" />
+          <div className="absolute inset-0 bg-gradient-to-r from-site/95 via-site/90 to-[#2d7009]/95" />
         </div>
         <section className="max-w-7xl mx-auto relative py-32 md:py-40 overflow-hidden">
           {/* Decorative Elements */}
@@ -196,14 +196,14 @@ export function Reviews({ content }) {
                 className="flex flex-wrap gap-4"
               >
                 <Link href={"/search"}>
-                  <Button className="bg-white text-[#3C950D] hover:bg-gray-100 px-8 py-6 text-lg shadow-2xl hover:scale-105 transition-all">
+                  <Button className="bg-white text-site hover:bg-gray-100 px-8 py-6 text-lg shadow-2xl hover:scale-105 transition-all">
                     Explore Collection
                   </Button>
                 </Link>
                 <Link href={`/pages/68fb0ce58b4cf00083b826d2`}>
                   <Button
                     variant="outline"
-                    className="border-2 border-white text-[#3C950D] hover:text-white hover:bg-white/10 backdrop-blur-sm px-8 py-6 text-lg shadow-2xl hover:scale-105 transition-all"
+                    className="border-2 border-white text-site hover:text-white hover:bg-white/10 backdrop-blur-sm px-8 py-6 text-lg shadow-2xl hover:scale-105 transition-all"
                   >
                     Learn More
                   </Button>

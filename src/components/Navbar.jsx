@@ -56,6 +56,7 @@ export default function Navbar({ initialCategories = [] }) {
   const [hoveredCategory, setHoveredCategory] = useState(null); // For desktop hover
   const { cartItems = [] } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const settings = useSelector((state) => state.setting?.settings || {});
   const { items } = useSelector((state) => state.blogs);
   const reduxProducts = useSelector((state) => {
     const products = state.product?.products;
@@ -160,6 +161,15 @@ export default function Navbar({ initialCategories = [] }) {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    try {
+      const color = settings?.websiteColor || null;
+      if (color && typeof document !== "undefined") {
+        document.documentElement.style.setProperty("--site-color", color);
+      }
+    } catch (e) {}
+  }, [settings?.websiteColor]);
 
   // Fetch wishlist when user logs in
   useEffect(() => {
@@ -288,7 +298,7 @@ export default function Navbar({ initialCategories = [] }) {
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               {!pathname.includes("/dashboard") && (
                 <SheetTrigger asChild>
-                  <button type="button" className="md:hidden text-[#3C950D] hover:text-[#3C950D] transition-colors p-2 pr-4">
+                  <button type="button" className="md:hidden text-site hover:text-site transition-colors p-2 pr-4">
                     <Menu className="w-6 h-6" />
                   </button>
                 </SheetTrigger>
@@ -298,15 +308,15 @@ export default function Navbar({ initialCategories = [] }) {
                 className="w-auto sm:w-[320px] overflow-y-auto"
               >
                 <SheetHeader>
-                  <SheetTitle className="text-[#3C950D]">Menu</SheetTitle>
+                  <SheetTitle className="text-site">Menu</SheetTitle>
                 </SheetHeader>
 
                 <div className="mt-6 flex flex-col gap-2">
                   <div
                     onClick={handleUserDashboardClick}
-                    className="flex mx-4 px-2 py-2 rounded-md bg-green-100 items-center gap-2 cursor-pointer hover:text-[#3C950D] transition-all hover:scale-105"
+                    className="flex mx-4 px-2 py-2 rounded-md bg-green-100 items-center gap-2 cursor-pointer hover:text-site transition-all hover:scale-105"
                   >
-                    <div className="w-7 h-7 md:w-8 md:h-8 bg-[#3C950D]  rounded-full flex items-center justify-center">
+                    <div className="w-7 h-7 md:w-8 md:h-8 bg-site  rounded-full flex items-center justify-center">
                       {displayName ? (
                         <span className="text-white font-semibold">
                           {displayName.charAt(0).toUpperCase()}
@@ -315,21 +325,21 @@ export default function Navbar({ initialCategories = [] }) {
                         <span className="text-white font-semibold">User</span>
                       )}
                     </div>
-                    <span className=" text-sm text-[#3C950D]">
+                    <span className=" text-sm text-site">
                       {displayName ?? "User"}
                     </span>
                   </div>
                   <Link
                     href="/"
                     onClick={() => setIsOpen(false)}
-                    className="w-full text-left px-4 py-1 text-gray-800 hover:bg-[#3C950D]/10 rounded-lg transition-colors font-semibold block"
+                    className="w-full text-left px-4 py-1 text-gray-800 hover:bg-site/10 rounded-lg transition-colors font-semibold block"
                   >
                     Home
                   </Link>
                   <Link
                     href="/search"
                     onClick={() => setIsOpen(false)}
-                    className="w-full text-left px-4 py-1 text-gray-800 hover:bg-[#3C950D]/10 rounded-lg transition-colors font-semibold block"
+                    className="w-full text-left px-4 py-1 text-gray-800 hover:bg-site/10 rounded-lg transition-colors font-semibold block"
                   >
                     All Products
                   </Link>
@@ -346,7 +356,7 @@ export default function Navbar({ initialCategories = [] }) {
                           href={`/search?category=${category._id}`}
                           prefetch={true}
                           onClick={() => setIsOpen(false)}
-                          className="w-full text-left px-4 py-2 text-gray-500 hover:bg-[#3C950D]/10 rounded-lg transition-colors block"
+                          className="w-full text-left px-4 py-2 text-gray-500 hover:bg-site/10 rounded-lg transition-colors block"
                         >
                           {category?.name}
                         </Link>
@@ -356,7 +366,7 @@ export default function Navbar({ initialCategories = [] }) {
                           <button
                             type="button"
                             onClick={() => toggleCategory(category._id)}
-                            className="px-3 py-2 hover:bg-[#3C950D]/10 rounded-lg transition-colors"
+                            className="px-3 py-2 hover:bg-site/10 rounded-lg transition-colors"
                           >
                             <ChevronDown
                               className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${expandedCategory === category._id
@@ -382,7 +392,7 @@ export default function Navbar({ initialCategories = [] }) {
                               href={`/search?subcategory=${sub._id}`}
                               prefetch={true}
                               onClick={() => setIsOpen(false)}
-                              className="w-full text-left px-4 py-2 text-sm text-gray-400 hover:bg-[#3C950D]/5 rounded-lg transition-colors block"
+                              className="w-full text-left px-4 py-2 text-sm text-gray-400 hover:bg-site/5 rounded-lg transition-colors block"
                             >
                               • {sub.name}
                             </Link>
@@ -397,7 +407,7 @@ export default function Navbar({ initialCategories = [] }) {
                   <Link
                     href="/pages/68fb0ce58b4cf00083b826d2"
                     onClick={() => setIsOpen(false)}
-                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-[#3C950D]/10 rounded-lg transition-colors block"
+                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-site/10 rounded-lg transition-colors block"
                   >
                     About Us
                   </Link>
@@ -405,7 +415,7 @@ export default function Navbar({ initialCategories = [] }) {
                   <Link
                     href="/contact"
                     onClick={() => setIsOpen(false)}
-                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-[#3C950D]/10 rounded-lg transition-colors block"
+                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-site/10 rounded-lg transition-colors block"
                   >
                     Contact Us
                   </Link>
@@ -417,8 +427,8 @@ export default function Navbar({ initialCategories = [] }) {
             <div className="flex items-center gap-2">
               <Link href="/" className="text-black">
                 <Image
-                  src="/bg removed.png"
-                  alt="TeaHaven Logo"
+                  src={getImageUrl(settings?.logo) || "/bg removed.png"}
+                  alt={settings?.tenant || "Site Logo"}
                   width={200}
                   height={200}
                   className=" md:h-[100px] h-[50px] w-auto max-sm:h-auto max-sm:w-[65px] object-contain "
@@ -433,7 +443,7 @@ export default function Navbar({ initialCategories = [] }) {
 
               <Link
                 href="/"
-                className="text-gray-700 hover:text-[#3C950D] transition-colors font-medium"
+                className="text-gray-700 hover:text-site transition-colors font-medium"
               >
                 Home
               </Link>
@@ -445,7 +455,7 @@ export default function Navbar({ initialCategories = [] }) {
                   setHoveredCategory(null);
                 }}
               >
-                <button type="button" className="flex items-center gap-1 text-gray-700 hover:text-[#3C950D] transition-colors py-2 font-medium">
+                <button type="button" className="flex items-center gap-1 text-gray-700 hover:text-site transition-colors py-2 font-medium">
                   Categories
                   <ChevronDown
                     className={`w-4 h-4 transition-transform ${showCategoryMenu ? "rotate-180" : ""
@@ -462,7 +472,7 @@ export default function Navbar({ initialCategories = [] }) {
                         <div className="w-1/3 bg-gray-50 border-r border-gray-200 overflow-y-auto">
                           <div className="p-4">
                             <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                              <span className="w-1 h-5 bg-[#3C950D] rounded-full"></span>
+                              <span className="w-1 h-5 bg-site rounded-full"></span>
                               All Categories
                             </h3>
                             <div className="space-y-1">
@@ -512,7 +522,7 @@ export default function Navbar({ initialCategories = [] }) {
                                       <div className="flex-1 min-w-0">
                                         <h4
                                           className={`font-medium text-sm transition-colors truncate ${hoveredCategory === category._id
-                                            ? "text-[#3C950D]"
+                                            ? "text-site"
                                             : "text-gray-700"
                                             }`}
                                         >
@@ -528,7 +538,7 @@ export default function Navbar({ initialCategories = [] }) {
                                       {category.subcategories?.length > 0 && (
                                         <ChevronRight
                                           className={`w-4 h-4 transition-colors ${hoveredCategory === category._id
-                                            ? "text-[#3C950D]"
+                                            ? "text-site"
                                             : "text-gray-400"
                                             }`}
                                         />
@@ -582,7 +592,7 @@ export default function Navbar({ initialCategories = [] }) {
                                                     setHoveredCategory(null);
                                                   }}
                                                 >
-                                                  <div className="group/sub flex items-center gap-3 p-3 rounded-lg hover:bg-[#3C950D]/5 transition-all cursor-pointer border border-transparent hover:border-[#3C950D]/20">
+                                                  <div className="group/sub flex items-center gap-3 p-3 rounded-lg hover:bg-site/5 transition-all cursor-pointer border border-transparent hover:border-site/20">
                                                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
                                                       {subcategory?.image ? (
                                                         <Image
@@ -603,7 +613,7 @@ export default function Navbar({ initialCategories = [] }) {
                                                         </div>
                                                       )}
                                                     </div>
-                                                    <span className="text-sm font-medium text-gray-700 group-hover/sub:text-[#3C950D] transition-colors">
+                                                    <span className="text-sm font-medium text-gray-700 group-hover/sub:text-site transition-colors">
                                                       {subcategory?.name}
                                                     </span>
                                                   </div>
@@ -625,8 +635,8 @@ export default function Navbar({ initialCategories = [] }) {
                               </>
                             ) : (
                               <div className="flex flex-col items-center justify-center h-full text-center">
-                                <div className="w-16 h-16 bg-[#3C950D]/10 rounded-full flex items-center justify-center mb-4">
-                                  <ChevronRight className="w-8 h-8 text-[#3C950D]" />
+                                <div className="w-16 h-16 bg-site/10 rounded-full flex items-center justify-center mb-4">
+                                  <ChevronRight className="w-8 h-8 text-site" />
                                 </div>
                                 <p className="text-gray-500 text-sm">
                                   Hover over a category to see subcategories
@@ -646,7 +656,7 @@ export default function Navbar({ initialCategories = [] }) {
                             setHoveredCategory(null);
                           }}
                         >
-                          <button type="button" className="w-full py-2.5 bg-gradient-to-r from-[#3C950D] to-[#2d7009] text-white rounded-lg hover:shadow-lg transition-all font-medium text-sm">
+                          <button type="button" className="w-full py-2.5 bg-gradient-to-r from-site to-[#2d7009] text-white rounded-lg hover:shadow-lg transition-all font-medium text-sm">
                             View All Categories →
                           </button>
                         </Link>
@@ -662,7 +672,7 @@ export default function Navbar({ initialCategories = [] }) {
                 onMouseEnter={() => setShowProductMenu(true)}
                 onMouseLeave={() => setShowProductMenu(false)}
               >
-                <button type="button" className="flex items-center gap-1 text-gray-700 hover:text-[#3C950D] transition-colors py-2 font-medium">
+                <button type="button" className="flex items-center gap-1 text-gray-700 hover:text-site transition-colors py-2 font-medium">
                   Products
                   <ChevronDown
                     className={`w-4 h-4 transition-transform ${showProductMenu ? "rotate-180" : ""
@@ -675,7 +685,7 @@ export default function Navbar({ initialCategories = [] }) {
                   <div className="absolute -left-[32vw] top-full pt-2 w-screen  max-w-6xl -ml-4">
                     <div className="bg-white rounded-lg shadow-2xl border border-gray-100 p-8">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="w-1 h-6 bg-[#3C950D] rounded-full"></span>
+                        <span className="w-1 h-6 bg-site rounded-full"></span>
                         Featured Products
                       </h3>
                       <div className="grid grid-cols-5 gap-4 max-h-[400px] overflow-y-auto">
@@ -705,7 +715,7 @@ export default function Navbar({ initialCategories = [] }) {
                                     />
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
                                   </div>
-                                  <h4 className="font-medium text-gray-900 text-sm mb-1 group-hover:text-[#3C950D] transition-colors line-clamp-2">
+                                  <h4 className="font-medium text-gray-900 text-sm mb-1 group-hover:text-site transition-colors line-clamp-2">
                                     {product.name}
                                   </h4>
                                   <div className="flex items-center gap-2">
@@ -713,7 +723,7 @@ export default function Navbar({ initialCategories = [] }) {
                                       const { salePrice, originalPrice, hasSale } = getDisplayPrice(product);
                                       return (
                                         <>
-                                          <span className="text-[#3C950D] font-semibold text-sm">
+                                          <span className="text-site font-semibold text-sm">
                                             ₹{salePrice}
                                           </span>
                                           {hasSale && (
@@ -735,7 +745,7 @@ export default function Navbar({ initialCategories = [] }) {
                         href="/search"
                         onClick={() => setShowProductMenu(false)}
                       >
-                        <button type="button" className="mt-6 w-full py-3 bg-gradient-to-r from-[#3C950D] to-[#2d7009] text-white rounded-lg hover:shadow-lg transition-all font-medium">
+                        <button type="button" className="mt-6 w-full py-3 bg-gradient-to-r from-site to-[#2d7009] text-white rounded-lg hover:shadow-lg transition-all font-medium">
                           Explore More Products →
                         </button>
                       </Link>
@@ -746,14 +756,14 @@ export default function Navbar({ initialCategories = [] }) {
 
               <Link
                 href="/pages/68fb0ce58b4cf00083b826d2"
-                className="text-gray-700 hover:text-[#3C950D] transition-colors font-medium"
+                className="text-gray-700 hover:text-site transition-colors font-medium"
               >
                 About Us
               </Link>
 
               <Link
                 href="/contact"
-                className="text-gray-700 hover:text-[#3C950D] transition-colors font-medium"
+                className="text-gray-700 hover:text-site transition-colors font-medium"
               >
                 Contact Us
               </Link>
@@ -770,7 +780,7 @@ export default function Navbar({ initialCategories = [] }) {
                 type="button"
                 ref={searchToggleRef}
                 onClick={() => setShowSearch(!showSearch)}
-                className="hover:text-[#3C950D] max-sm:hidden text-black outline-none transition-all hover:scale-110"
+                className="hover:text-site max-sm:hidden text-black outline-none transition-all hover:scale-110"
               >
                 <Search className="w-5 h-5 mb-1/2  md:w-6 md:h-6" />
               </button>
@@ -780,9 +790,9 @@ export default function Navbar({ initialCategories = [] }) {
                 <Link
                   href={isAuthenticated ? "/dashboard?tab=wishlist" : "/login"}
                 >
-                  <button type="button" className="relative flex hover:text-[#3C950D] text-black transition-all hover:scale-110">
+                  <button type="button" className="relative flex hover:text-site text-black transition-all hover:scale-110">
                     <Heart className="w-5 h-5 md:w-6 md:h-6" />
-                    <Badge className="absolute text-white -top-1 -right-1 md:-top-1 md:-right-2  bg-[#3C950D]  w-4 h-4  rounded-full p-0 flex items-center justify-center text-[10px]  shadow-lg">
+                    <Badge className="absolute text-white -top-1 -right-1 md:-top-1 md:-right-2  bg-site  w-4 h-4  rounded-full p-0 flex items-center justify-center text-[10px]  shadow-lg">
                       {LikedProducts?.length || 0}
                     </Badge>
                   </button>
@@ -793,10 +803,10 @@ export default function Navbar({ initialCategories = [] }) {
               <button
                 type="button"
                 onClick={handelCartToggle}
-                className="relative flex max-sm:mr-2 hover:text-[#3C950D] text-black transition-all hover:scale-110"
+                className="relative flex max-sm:mr-2 hover:text-site text-black transition-all hover:scale-110"
               >
                 <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
-                <Badge className="absolute text-white -top-1 -right-1 md:-top-1 md:-right-2  bg-[#3C950D]  w-4 h-4  rounded-full p-0 flex items-center justify-center text-[10px]  shadow-lg">
+                <Badge className="absolute text-white -top-1 -right-1 md:-top-1 md:-right-2  bg-site  w-4 h-4  rounded-full p-0 flex items-center justify-center text-[10px]  shadow-lg">
                   {Array.isArray(cartItems) ? cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0}
                 </Badge>
               </button>
@@ -804,9 +814,9 @@ export default function Navbar({ initialCategories = [] }) {
               {/* User */}
               <div
                 onClick={handleUserDashboardClick}
-                className="flex max-sm:hidden items-center gap-2 cursor-pointer hover:text-[#3C950D] transition-all hover:scale-105"
+                className="flex max-sm:hidden items-center gap-2 cursor-pointer hover:text-site transition-all hover:scale-105"
               >
-                <div className="w-7 h-7 md:w-8 md:h-8 bg-[#3C950D]  rounded-full flex items-center justify-center">
+                <div className="w-7 h-7 md:w-8 md:h-8 bg-site  rounded-full flex items-center justify-center">
                   {displayName ? (
                     <span className="text-white font-semibold">
                       {displayName.charAt(0).toUpperCase()}
@@ -815,7 +825,7 @@ export default function Navbar({ initialCategories = [] }) {
                     <span className="text-white font-semibold">User</span>
                   )}
                 </div>
-                <span className="hidden lg:block text-sm text-[#3C950D]">
+                <span className="hidden lg:block text-sm text-site">
                   {displayName ?? "User"}
                 </span>
               </div>
@@ -843,7 +853,7 @@ export default function Navbar({ initialCategories = [] }) {
               <button
                 type="button"
                 onClick={() => setShowSearch(false)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#3C950D] transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-site transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>

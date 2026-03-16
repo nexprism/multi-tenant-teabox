@@ -13,7 +13,7 @@ export function NewLaunchBanner() {
           backgroundImage: `url(https://images.unsplash.com/photo-1617266982722-28a0deb420c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWElMjBsZWF2ZXMlMjBjbG9zZXVwfGVufDF8fHx8MTc2MDQyMTExNnww&ixlib=rb-4.1.0&q=80&w=1080)`,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#3C950D]/95 via-[#3C950D]/90 to-[#2d7009]/95" />
+        <div className="absolute inset-0 bg-gradient-to-r from-site/95 via-site/90 to-[#2d7009]/95" />
       </div>
 
       {/* Decorative Elements */}
@@ -82,7 +82,7 @@ export function NewLaunchBanner() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="flex flex-wrap gap-4"
           >
-            <Button className="bg-white text-[#3C950D] hover:bg-gray-100 px-8 py-6 text-lg shadow-2xl hover:scale-105 transition-all">
+            <Button className="bg-white text-site hover:bg-gray-100 px-8 py-6 text-lg shadow-2xl hover:scale-105 transition-all">
               Explore Collection
             </Button>
             <Button

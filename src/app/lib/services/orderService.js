@@ -1,3 +1,49 @@
+// Shiprocket API integration helper
+async function createShiprocketOrder(order, shippingAddress, items) {
+  // 1. Authenticate
+  const authRes = await axios.post('https://apiv2.shiprocket.in/v1/external/auth/login', {
+    email: process.env.SHIPROCKET_API_EMAIL,
+    password: process.env.SHIPROCKET_API_PASSWORD
+  });
+  const token = authRes.data.token;
+
+  // 2. Prepare payload
+  const payload = {
+    order_id: order._id.toString(),
+    order_date: new Date().toISOString().split('T')[0],
+    pickup_location: "Default", // Change if you use a different pickup name
+    billing_customer_name: shippingAddress.fullName,
+    billing_address: shippingAddress.addressLine1,
+    billing_city: shippingAddress.city,
+    billing_pincode: shippingAddress.postalCode,
+    billing_state: shippingAddress.state,
+    billing_country: shippingAddress.country,
+    billing_email: shippingAddress.email || order.shippingAddress?.email || "test@example.com",
+    billing_phone: shippingAddress.phoneNumber,
+    order_items: items.map(item => ({
+      name: item.name || "Product",
+      sku: item.sku || "SKU",
+      units: item.quantity,
+      selling_price: item.price,
+      discount: 0,
+      tax: 0
+    })),
+    payment_method: order.paymentMode === "COD" ? "COD" : "Prepaid",
+    sub_total: order.total,
+    length: 10,
+    breadth: 10,
+    height: 10,
+    weight: 1
+  };
+
+  // 3. Create order in Shiprocket
+  const res = await axios.post(
+    'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
+    payload,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return res.data;
+}
 import mongoose from "mongoose";
 import { OrderSchema } from "../models/Order.js";
 import OrderRepository from "../repository/OrderRepository";
@@ -454,6 +500,7 @@ class OrderService {
 
   async createOrder(data, conn, tenant) {
     try {
+      console.log("[OrderService] createOrder called", { userId: data?.userId, paymentMode: data?.paymentMode, itemsCount: data?.items?.length });
       const {
         userId,
         items,
@@ -464,19 +511,7 @@ class OrderService {
         deliveryOption,
         paymentMode, // must be passed in data: "COD" or "Prepaid"
       } = data;
-
       // Validate required fields
-      //consolle.log("Checking order data: ===>");
-      //consolle.log(
-      //   userId,
-      //   items, 
-      //   items.length,
-      //   shippingAddress,
-      //   billingAddress,
-      //   paymentId,
-      //   deliveryOption,
-      //   paymentMode
-      // );
       if (
         !userId ||
         !items ||
@@ -603,6 +638,18 @@ class OrderService {
         // Still create orderItems array for database storage
         for (const item of items) {
           const { product, variant, quantity, price } = item;
+          
+          // Fetch product/variant details to enrich item for Shiprocket
+          if (variant) {
+            const v = await this.orderRepository.findVariantById(variant);
+            item.name = v.name;
+            item.sku = v.sku;
+          } else {
+            const p = await this.orderRepository.findProductById(product);
+            item.name = p.name;
+            item.sku = p.sku;
+          }
+
           orderItems.push({
             product: product,
             variant: variant || null,
@@ -614,19 +661,25 @@ class OrderService {
         for (const item of items) {
           const { product, variant, quantity, price } = item;
           let itemPrice = price || 0;
-          if (!itemPrice) {
-            if (variant) {
-              const newVariant = await this.orderRepository.findVariantById(
-                variant
-              );
-              itemPrice = newVariant.price;
-            } else {
-              const newProduct = await this.orderRepository.findProductById(
-                product
-              );
-              itemPrice = newProduct.price;
-            }
+          let itemName = "";
+          let itemSku = "";
+
+          if (variant) {
+            const newVariant = await this.orderRepository.findVariantById(variant);
+            itemPrice = itemPrice || newVariant.price;
+            itemName = newVariant.name;
+            itemSku = newVariant.sku;
+          } else {
+            const newProduct = await this.orderRepository.findProductById(product);
+            itemPrice = itemPrice || newProduct.price;
+            itemName = newProduct.name;
+            itemSku = newProduct.sku;
           }
+
+          item.price = itemPrice;
+          item.name = itemName;
+          item.sku = itemSku;
+
           orderItems.push({
             product: product,
             variant: variant || null,
@@ -756,15 +809,38 @@ class OrderService {
         shippingPriority: selectedShipping.priority,
       };
       //consolle.log("data before repo ===> ", orderData);
-      const order = await this.orderRepository.create(orderData);
+      let order = await this.orderRepository.create(orderData);
+
+
+      // --- Shiprocket API Integration ---
+      try {
+        console.log("[OrderService] About to call Shiprocket API integration block", { orderId: order._id });
+        const shiprocketRes = await createShiprocketOrder(order, shippingAddress, items);
+        console.log("Shiprocket API response:", shiprocketRes);
+        // Save Shiprocket order ID and tracking info to your order
+        const updateResult = await this.orderRepository.updateOrder(order._id, {
+          "shipping_details.platform": "shiprocket",
+          "shipping_details.reference_number": shiprocketRes.order_id?.toString(),
+          "shipping_details.tracking_url": shiprocketRes.shipment_track_url || "",
+          "shipping_details.raw_response": shiprocketRes,
+          "isShipmentBooked": true
+        });
+        console.log("Order update result:", updateResult);
+        // Fetch the updated order with Shiprocket info
+        order = await this.orderRepository.model.findById(order._id).lean();
+        console.log("Order after Shiprocket update:", order);
+      } catch (err) {
+        // Optionally log or handle Shiprocket API errors
+        console.log("Shiprocket order creation failed:", err.message);
+      }
 
       // Send email notifications
       const orderDate = new Date().toISOString().split("T")[0];
       const replacements = {
         app_name: "YourStore", // Replace with your app name
         order_id: order._id.toString(),
-        order_url: `https://yourstore.com/orders/${order._id}`, // Replace with your actual order URL
-        owner_name: "Admin", // Replace with actual owner name if available
+        order_url: `https://yourstore.com/orders/${order._id}`,
+        owner_name: "Admin",
         order_date: orderDate,
       };
 
@@ -1240,7 +1316,7 @@ class OrderService {
     return services.map((s) => ({
       code: s.CODE,
       name: s.NAME,
-      courier: "DELHIVERY",
+      courier: "DTDC",
       priority: 0, // default, will override from ShippingModel
     }));
   }

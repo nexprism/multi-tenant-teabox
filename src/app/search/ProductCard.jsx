@@ -375,10 +375,10 @@ const ProductCard = ({ product, showDes, buyNow }) => {
 
                   <button
                     onClick={(e) => handleAddToCart(e)}
-                    className="h-10 max-sm:h-9 w-12 flex justify-center group/group2 items-center border border-[#3C950D] hover:bg-[#3C950D] rounded-lg transition-colors"
+                    className="h-10 max-sm:h-9 w-12 flex justify-center group/group2 items-center border border-site hover:bg-site rounded-lg transition-colors"
                     type="button"
                   >
-                    <ShoppingCart className="w-4 h-4 text-[#3C950D] group-hover/group2:text-white" />
+                    <ShoppingCart className="w-4 h-4 text-site group-hover/group2:text-white" />
                   </button>
                 </div>
               ) : (

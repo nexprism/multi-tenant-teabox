@@ -154,7 +154,7 @@ export function CustomerFavorites({ content }: { content: any }) {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl mb-4 bg-gradient-to-r from-site to-[#2d7009] bg-clip-text text-transparent">
             {content?.title || "Customer Favorites"}
           </h2>
           <p className="text-gray-600">
@@ -254,14 +254,14 @@ export function CustomerFavorites({ content }: { content: any }) {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         {product.rating > 3 && (
-                          <div className="absolute top-4 right-4 bg-gradient-to-r from-[#3C950D] to-[#2d7009] text-white px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
+                          <div className="absolute top-4 right-4 bg-gradient-to-r from-site to-[#2d7009] text-white px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
                             <Star className="w-4 h-4 fill-current" />
                             <span className="text-sm">{product.rating}</span>
                           </div>
                         )}
                       </div>
                       <div className="p-5">
-                        <h3 className="h-12 group-hover:text-[#3C950D] line-clamp-1 mb-2  transition-colors">
+                        <h3 className="h-12 group-hover:text-site line-clamp-1 mb-2  transition-colors">
                           {product.name}
                         </h3>
                         <div
@@ -271,7 +271,7 @@ export function CustomerFavorites({ content }: { content: any }) {
                           }}
                           className="flex items-center justify-between"
                         >
-                          <span className="text-[#3C950D]">
+                          <span className="text-site">
                             <div className="text-lg font-bold text-gray-800">
                               {(() => {
                                 const { salePrice, originalPrice, hasSale } = getDisplayPrice(product);
@@ -290,7 +290,7 @@ export function CustomerFavorites({ content }: { content: any }) {
                           </span>
                           <Button
                             size="sm"
-                            className="bg-gradient-to-r from-[#3C950D] to-[#2d7009] hover:from-[#2d7009] hover:to-[#3C950D] shadow-lg hover:shadow-xl transition-all"
+                            className="bg-gradient-to-r from-site to-[#2d7009] hover:from-[#2d7009] hover:to-site shadow-lg hover:shadow-xl transition-all"
                           >
                             <ShoppingCart className="w-4 h-4 text-white" />
                           </Button>

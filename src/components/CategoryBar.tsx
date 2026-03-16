@@ -15,7 +15,7 @@ export function CategoryBar() {
   }, [dispatch, categories]);
 
   return (
-    <div className="hidden md:block bg-gradient-to-r from-[#3C950D] via-[#45a610] to-[#3C950D] text-white shadow-lg">
+    <div className="hidden md:block bg-gradient-to-r from-site via-[#45a610] to-site text-white shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-3">
           {categories.map((category: any, index: number) => (
