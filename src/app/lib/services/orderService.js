@@ -1,11 +1,19 @@
 // Shiprocket API integration helper
 async function createShiprocketOrder(order, shippingAddress, items) {
   // 1. Authenticate
-  const authRes = await axios.post('https://apiv2.shiprocket.in/v1/external/auth/login', {
-    email: process.env.SHIPROCKET_API_EMAIL,
-    password: process.env.SHIPROCKET_API_PASSWORD
-  });
-  const token = authRes.data.token;
+  try {
+
+    console?.log("error", process.env.SHIPROCKET_API_EMAIL, process.env.SHIPROCKET_API_PASSWORD);
+
+    const authRes = await axios.post('https://apiv2.shiprocket.in/v1/external/auth/login', {
+      email: process.env.SHIPROCKET_API_EMAIL,
+      password: process.env.SHIPROCKET_API_PASSWORD
+    });
+    var token = authRes.data.token;
+  } catch (authError) {
+    console.log("[Shiprocket Auth Error] Failed to login:", authError.response?.data || authError.message);
+    throw authError; // rethrow to be caught below
+  }
 
   // 2. Prepare payload
   const payload = {
@@ -832,12 +840,9 @@ class OrderService {
       } catch (err) {
         // Optionally log or handle Shiprocket API errors
         console.log("Shiprocket order creation failed:", err.message);
-      }
-
-      // Send email notifications
-      const orderDate = new Date().toISOString().split("T")[0];
-      const replacements = {
-        app_name: "YourStore", // Replace with your app name
+          if (err.response) {
+            console.log("Shiprocket Response Data:", JSON.stringify(err.response.data, null, 2));
+          }
         order_id: order._id.toString(),
         order_url: `https://yourstore.com/orders/${order._id}`,
         owner_name: "Admin",
