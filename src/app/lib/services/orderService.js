@@ -1,5 +1,5 @@
 // Shiprocket API integration helper
-async function createShiprocketOrder(order, shippingAddress, items) {
+async function createShiprocketOrder(order, shippingAddress, items, pickupNickname = "Default") {
   // 1. Authenticate
   try {
 
@@ -19,38 +19,58 @@ async function createShiprocketOrder(order, shippingAddress, items) {
   const payload = {
     order_id: order._id.toString(),
     order_date: new Date().toISOString().split('T')[0],
-    pickup_location: "Default", // Change if you use a different pickup name
-    billing_customer_name: shippingAddress.fullName,
+    pickup_location: pickupNickname || "Default", // Use dynamic pickup from settings
+    billing_customer_name: shippingAddress.fullName.split(' ')[0] || "Customer",
+    billing_last_name: shippingAddress.fullName.split(' ').slice(1).join(' ') || "",
     billing_address: shippingAddress.addressLine1,
+    billing_address_2: shippingAddress.addressLine2 || "",
     billing_city: shippingAddress.city,
     billing_pincode: shippingAddress.postalCode,
     billing_state: shippingAddress.state,
-    billing_country: shippingAddress.country,
-    billing_email: shippingAddress.email || order.shippingAddress?.email || "test@example.com",
+    billing_country: shippingAddress.country || "India",
+    billing_email: shippingAddress.email || order.shippingAddress?.email || "customer@example.com",
     billing_phone: shippingAddress.phoneNumber,
+    shipping_is_billing: true,
     order_items: items.map(item => ({
-      name: item.name || "Product",
-      sku: item.sku || "SKU",
+      name: item.name || item.product?.name || "Product",
+      sku: item.sku || item.product?.sku || item.variant?.sku || "SKU-DEFAULT",
       units: item.quantity,
       selling_price: item.price,
       discount: 0,
-      tax: 0
+      tax: 0,
+      hsn: 0
     })),
     payment_method: order.paymentMode === "COD" ? "COD" : "Prepaid",
+    shipping_charges: order.shippingCharge || 0,
+    giftwrap_charges: 0,
+    transaction_charges: 0,
+    total_discount: order.discount || 0,
     sub_total: order.total,
     length: 10,
     breadth: 10,
     height: 10,
-    weight: 1
+    weight: 0.5
   };
 
+  console.log("[Shiprocket] Final Payload:", JSON.stringify(payload, null, 2));
+
   // 3. Create order in Shiprocket
-  const res = await axios.post(
-    'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
-    payload,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return res.data;
+  try {
+    const res = await axios.post(
+      'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
+      payload,
+      { 
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 20000 // 20s timeout
+      }
+    );
+    console.log("[Shiprocket] API Response Status:", res.status);
+    console.log("[Shiprocket] API Response Data:", JSON.stringify(res.data, null, 2));
+    return res.data;
+  } catch (err) {
+    console.error("[Shiprocket API Error] Order creation failed:", err.response?.data || err.message);
+    throw err;
+  }
 }
 import mongoose from "mongoose";
 import { OrderSchema } from "../models/Order.js";
@@ -822,37 +842,83 @@ class OrderService {
 
       // --- Shiprocket API Integration ---
       try {
-        console.log("[OrderService] About to call Shiprocket API integration block", { orderId: order._id });
-        const shiprocketRes = await createShiprocketOrder(order, shippingAddress, items);
-        console.log("Shiprocket API response:", shiprocketRes);
-        // Save Shiprocket order ID and tracking info to your order
-        const updateResult = await this.orderRepository.updateOrder(order._id, {
-          "shipping_details.platform": "shiprocket",
-          "shipping_details.reference_number": shiprocketRes.order_id?.toString(),
-          "shipping_details.tracking_url": shiprocketRes.shipment_track_url || "",
-          "shipping_details.raw_response": shiprocketRes,
-          "isShipmentBooked": true
-        });
-        console.log("Order update result:", updateResult);
-        // Fetch the updated order with Shiprocket info
-        order = await this.orderRepository.model.findById(order._id).lean();
-        console.log("Order after Shiprocket update:", order);
+        console.log("[OrderService] Initiating Shiprocket order creation flow", { orderId: order._id });
+        
+        // Skip if sync is disabled in settings
+        if (settings?.shiprocketSettings?.isSyncEnabled === false) {
+           console.log("[OrderService] Shiprocket sync is disabled in settings");
+           throw new Error("Shiprocket sync is disabled in settings");
+        }
+
+        const pickupNickname = settings?.shiprocketSettings?.pickupLocationNickname || "Default";
+        
+        // Enforce a small delay or retry logic if needed, but usually adhoc creation is immediate
+        const shiprocketRes = await createShiprocketOrder(order, shippingAddress, items, pickupNickname);
+        console.log("[OrderService] Shiprocket Helper returned:", !!shiprocketRes);
+
+        if (shiprocketRes && (shiprocketRes.order_id || shiprocketRes.shipment_id)) {
+          console.log("[OrderService] Found Shiprocket reference IDs:", { 
+            order_id: shiprocketRes.order_id,
+            shipment_id: shiprocketRes.shipment_id 
+          });
+
+          await this.orderRepository.updateOrder(order._id, {
+            "shipping_details.platform": "shiprocket",
+            "shipping_details.reference_number": (shiprocketRes.order_id || shiprocketRes.shipment_id)?.toString(),
+            "shipping_details.tracking_url": shiprocketRes.shipment_track_url || `https://shiprocket.co/tracking/${shiprocketRes.shipment_id || ''}`,
+            "shipping_details.raw_response": shiprocketRes,
+            "isShipmentBooked": true,
+            "status": "confirmed"
+          });
+        } else {
+          console.error("[OrderService] Shiprocket API succeeded but returned no IDs!", shiprocketRes);
+          await this.orderRepository.updateOrder(order._id, {
+            "shipping_details.platform": "shiprocket",
+            "shipping_details.raw_response": shiprocketRes,
+            "shipping_details.current_status": "SYNCED_WITHOUT_ID",
+            "isShipmentBooked": false
+          });
+        }
       } catch (err) {
-        // Optionally log or handle Shiprocket API errors
-        console.log("Shiprocket order creation failed:", err.message);
-          if (err.response) {
-            console.log("Shiprocket Response Data:", JSON.stringify(err.response.data, null, 2));
-          }
-        order_id: order._id.toString(),
-        order_url: `https://yourstore.com/orders/${order._id}`,
+        console.error("[OrderService] Shiprocket integration failed for order:", order._id, err.message);
+        
+        // Save the error details to the order record instead of just logging them
+        const errorDetail = err.response?.data || { message: err.message };
+        await this.orderRepository.updateOrder(order._id, {
+          "shipping_details.platform": "shiprocket",
+          "shipping_details.raw_response": errorDetail,
+          "shipping_details.current_status": "FAILED_TO_SYNC",
+          "isShipmentBooked": false
+        });
+        
+        if (err.response?.data) {
+          console.error("[OrderService] Shiprocket Error Detail:", JSON.stringify(err.response.data));
+        }
+        // We don't throw here to ensure the local order creation still succeeds for the user
+      }
+
+      // Fetch updated order
+      const finalOrder = await this.orderRepository.model.findById(order._id).lean();
+
+      // --- Email Notifications ---
+      const orderDate = finalOrder.placedAt ? new Date(finalOrder.placedAt).toLocaleString("en-IN") : new Date().toLocaleString("en-IN");
+      const customerEmailAddress = shippingAddress.email || customerEmail || "customer@example.com";
+
+      const replacements = {
+        order_id: finalOrder._id.toString(),
+        order_url: `https://${tenant}/orders/${finalOrder._id}`,
         owner_name: "Admin",
         order_date: orderDate,
+        total_amount: finalOrder.total.toFixed(2),
+        customer_name: shippingAddress.fullName,
+        tracking_id: finalOrder.shipping_details?.reference_number || "N/A",
+        tracking_url: finalOrder.shipping_details?.tracking_url || "#"
       };
 
       // Send email to customer
       const customerEmailResult = await this.emailService.sendOrderEmail({
         templateName: "Order Created",
-        to: customerEmail,
+        to: customerEmailAddress,
         replacements,
         conn,
       });
@@ -1103,7 +1169,7 @@ class OrderService {
       //   //consolle.error("Auto-call order confirm error:", err.message);
       // }
 
-      const responseData = { order };
+      const responseData = { order: finalOrder };
       if (typeof bookingResult !== 'undefined' && bookingResult && bookingResult.resp) {
         responseData.shipment = bookingResult.resp;
         responseData.shippedWith = bookingResult.shipping;

@@ -356,6 +356,7 @@ export default function CheckoutPopup() {
           postalCode: formData.pincode.trim(),
           country: formData.country || "India",
           phoneNumber: formData.phone,
+          email: formData.email || user?.email,
         },
         billingAddress: {
           fullName: `${formData.firstName} ${formData.lastName}`,
@@ -366,6 +367,7 @@ export default function CheckoutPopup() {
           postalCode: formData.pincode.trim(),
           country: formData.country || "India",
           phoneNumber: formData.phone,
+          email: formData.email || user?.email,
         },
         deliveryOption: "standard_delivery",
       };
@@ -469,6 +471,7 @@ export default function CheckoutPopup() {
                   postalCode: formData.pincode,
                   country: formData.country || "India",
                   phoneNumber: formData.phone,
+                  email: formData.email || user?.email,
                 },
                 billingAddress: {
                   fullName: `${formData.firstName} ${formData.lastName}`,
@@ -479,6 +482,7 @@ export default function CheckoutPopup() {
                   postalCode: formData.pincode,
                   country: formData.country || "India",
                   phoneNumber: formData.phone,
+                  email: formData.email || user?.email,
                 },
                 paymentDetails: response.razorpay_payment_id,
                 deliveryOption: "standard_delivery",
@@ -617,6 +621,7 @@ export default function CheckoutPopup() {
               postalCode: formData.pincode.trim(),
               country: formData.country || "India",
               phoneNumber: formData.phone,
+              email: formData.email || user?.email,
             },
             billingAddress: {
               fullName: `${formData.firstName} ${formData.lastName}`,
@@ -627,6 +632,7 @@ export default function CheckoutPopup() {
               postalCode: formData.pincode.trim(),
               country: formData.country || "India",
               phoneNumber: formData.phone,
+              email: formData.email || user?.email,
             },
             deliveryOption: "standard_delivery",
           };

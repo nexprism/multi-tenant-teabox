@@ -59,6 +59,12 @@ const settingSchema = new mongoose.Schema(
       connectedAt: { type: Date, default: null },
       tokenExpiresAt: { type: Date, default: null }, // Track token expiration
     },
+
+    // Shiprocket Settings
+    shiprocketSettings: {
+      pickupLocationNickname: { type: String, default: "Default" },
+      isSyncEnabled: { type: Boolean, default: true },
+    },
   },
   { timestamps: true }
 );
