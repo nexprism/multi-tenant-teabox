@@ -107,7 +107,9 @@ export async function POST(request) {
         
         let brandName = subdomain || "E-Commerce Store";
         try {
-          const dbConnect = require("../../connection/dbConnect.js").default;
+          // Use ES import for dbConnect to avoid case-sensitivity issues
+          // and ensure consistency across environments
+          // Import at the top of the file for best practice
           await dbConnect();
           const mongoose = require("mongoose");
           const tenantSchema = new mongoose.Schema({
