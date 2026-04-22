@@ -37,6 +37,7 @@ export async function getDbConnection(subdomain) {
 
     const Tenant = mongoose.models.Tenant || mongoose.model('Tenant', tenantSchema);
     const tenant = await Tenant.findOne({ subdomain });
+    console.log('[getDbConnection] Tenant lookup:', tenant);
 
     if (!tenant || !tenant.dbUri) {
       console.log(`Tenant '${subdomain}' not found or missing dbUri, falling back to default DB.`);

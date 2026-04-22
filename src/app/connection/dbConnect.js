@@ -1,11 +1,23 @@
 import mongoose from "mongoose";
 
 async function dbConnect(dbUri) {
-  // //consolle.log("Connecting to MongoDB...", dbUri);
+  // eslint-disable-next-line no-console
+  const maskUri = (u) => {
+    try {
+      return u.replace(/:\/\/.*@/, '://***@');
+    } catch (e) {
+      return '***';
+    }
+  };
+
+  // eslint-disable-next-line no-console
+  console.log(`[dbConnect] Attempting connection. dbUri: ${maskUri(dbUri || '')}, defaultUri: ${maskUri(process.env.MONGODB_URI || '')}`);
   const defaultUri = process.env.MONGODB_URI;
   const uri = dbUri || defaultUri;
   // //consolle.log("Using URI:", uri);
   if (!uri) {
+    // eslint-disable-next-line no-console
+    console.error('[dbConnect] No MongoDB URI provided!');
     const err = new Error("DB not found");
     err.status = 404;
     throw err;
@@ -18,28 +30,45 @@ async function dbConnect(dbUri) {
   }
   if (cached.conn) return cached.conn;
   if (!cached.promise) {
+    // Default connection options with reasonable timeouts so a bad
+    // tenant URI doesn't block requests for the driver's 30s default.
+    const defaultOptions = {
+      bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 10000,
+    };
+
     if (uri === defaultUri) {
-      // Use default connection for global DB
+      // eslint-disable-next-line no-console
+      console.log(`[dbConnect] Connecting to DEFAULT DB: ${maskUri(uri)}`);
       cached.promise = mongoose
-        .connect(uri, {
-          bufferCommands: false,
-          maxPoolSize: 10,
+        .connect(uri, defaultOptions)
+        .then((mongoose) => {
+          // eslint-disable-next-line no-console
+          console.log(`[dbConnect] Connected to DEFAULT DB: ${maskUri(uri)}`);
+          return mongoose.connection;
         })
-        .then((mongoose) => mongoose.connection)
         .catch((err) => {
           cached.promise = null;
+          // eslint-disable-next-line no-console
+          console.error(`[dbConnect] MongoDB default connection error (${maskUri(uri)}):`, err && err.message ? err.message : err);
           throw err;
         });
     } else {
-      // Use createConnection for tenant DBs
-      const conn = mongoose.createConnection(uri, {
-        bufferCommands: false,
-        maxPoolSize: 10,
-      });
+      // eslint-disable-next-line no-console
+      console.log(`[dbConnect] Connecting to TENANT DB: ${maskUri(uri)}`);
+      const conn = mongoose.createConnection(uri, defaultOptions);
       cached.promise = new Promise((resolve, reject) => {
-        conn.once("open", () => resolve(conn));
+        conn.once("open", () => {
+          // eslint-disable-next-line no-console
+          console.log(`[dbConnect] Connected to TENANT DB: ${maskUri(uri)}`);
+          resolve(conn);
+        });
         conn.on("error", (err) => {
           cached.promise = null;
+          // eslint-disable-next-line no-console
+          console.error(`[dbConnect] MongoDB tenant connection error (${maskUri(uri)}):`, err && err.message ? err.message : err);
           reject(err);
         });
       });
@@ -48,7 +77,8 @@ async function dbConnect(dbUri) {
   try {
     cached.conn = await cached.promise;
     if (process.env.NODE_ENV !== "production") {
-      //consolle.log("MongoDB connected:", uri);
+      // eslint-disable-next-line no-console
+      console.log(`[dbConnect] MongoDB connected: ${maskUri(uri)}`);
     }
     // If this is a tenant connection (created via createConnection), ensure
     // commonly-populated referenced models (like `User`) are registered on
@@ -88,9 +118,21 @@ async function dbConnect(dbUri) {
 
     return cached.conn;
   } catch (err) {
-    //consolle.error("MongoDB connection error:", err);
+    // eslint-disable-next-line no-console
+    console.error(`[dbConnect] MongoDB connection error:`, err && err.message ? err.message : err);
     throw err;
   }
 }
 
 export default dbConnect;
+
+// Optional: pre-warm default DB connection to avoid first-request stalls.
+// Set environment variable PREWARM_DB=true to enable.
+if (process.env.PREWARM_DB === 'true' && process.env.MONGODB_URI) {
+  // eslint-disable-next-line no-console
+  console.log('Pre-warming default MongoDB connection...');
+  dbConnect().catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error('Pre-warm MongoDB connection failed:', err && err.message ? err.message : err);
+  });
+}
