@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-      "dev:saasneurahost": "cross-env HOST=saasneurahost.localhost PORT=3001 next dev --hostname saasneurahost.localhost",
+    "dev:saasneurahost": "cross-env HOST=saasneurahost.localhost PORT=3001 next dev --hostname saasneurahost.localhost",
+    "dev:ecomsaas": "cross-env HOST=ecomsaas.localhost PORT=3001 next dev --hostname ecomsaas.localhost",
     "dev": "next dev --turbopack",
     "build": "next build ",
     "start": "next start",
@@ -12,7 +13,7 @@
     "dev:bharat": "cross-env PORT=3001 next dev --hostname bharat.localhost",
     "build:bharat": "cross-env NEXT_PUBLIC_TENANT=bharat next build",
     "start:bharat": "cross-env PORT=3001 next start --hostname bharat.localhost",
-      "dev:all": "concurrently \"npm run dev:tenant1\" \"npm run dev:saasneurahost\"",
+    "dev:all": "concurrently \"npm run dev:tenant1\" \"npm run dev:saasneurahost\"",
     "start:all": "concurrently \"npm run start\" \"npm run start:saasneurahost\" --hostname saasneurahost.localhost",
     "lint": "next lint",
     "test": "jest",
