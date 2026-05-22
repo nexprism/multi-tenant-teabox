@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev:saasneurahost": "cross-env HOST=saasneurahost.localhost PORT=3001 next dev --hostname saasneurahost.localhost",
-    "dev:ecomsaas": "cross-env HOST=ecomsaas.localhost PORT=8002 next dev --hostname ecomsaas.hostilence.com",
+    "dev:ecomsaas": "cross-env HOST=ecomsaas.hostilence.com PORT=8002 next dev --hostname ecomsaas.hostilence.com",
     "dev": "next dev --turbopack",
     "build": "next build ",
     "start": "next start",
